@@ -14,6 +14,7 @@ function createWindow() {
       color: '#1f1f1f',
       height: 30,
     },
+    backgroundColor: '#1f1f1f',
     webPreferences: {
       nodeIntegration: true,
       contextIsolation: false,
@@ -22,7 +23,7 @@ function createWindow() {
   });
 
   if (isDev) {
-    mainWindow.loadURL('http://127.0.0.1:5173/');
+    mainWindow.loadURL('http://localhost:5173/');
   } else {
     mainWindow.loadFile(path.join(__dirname, './dist/vue/index.html'));
   }

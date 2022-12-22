@@ -1,10 +1,10 @@
 <template>
   <footer>
     <div class="player-left">
-      <img class="track-img" src="https://i.scdn.co/image/ab67616d00004851fd56f3c7a294f5cfe51c7b17" />
+      <img class="track-cover" :src="currentTrack.cover" />
       <div class="track-name-author">
-        <span class="track-name">Jingle Bell Rock</span>
-        <span class="track-author">Bobby Helms</span>
+        <span class="track-name">{{ currentTrack.name }}</span>
+        <span class="track-author">{{ currentTrack.author }}</span>
       </div>
     </div>
     <div class="player-middle">
@@ -13,7 +13,10 @@
           <button style="rotate: 180deg" class="player-button"><Chevron /></button>
         </Tooltip>
 
-        <button class="player-button"><CirclePlay /></button>
+        <button @click="() => emit('togglePlayPause')" class="player-button">
+          <CirclePlay v-if="usePlayerStore().audioIsPaused" />
+          <CirclePause v-else />
+        </button>
 
         <Tooltip text="Next track" :positioning="TooltipPositioning.right">
           <button class="player-button"><Chevron /></button>
@@ -21,24 +24,43 @@
       </div>
       <div class="timeline">
         <span class="time">2:49</span>
-        <Slider :model-value="50" step="1" :min="0" :max="100" />
+        <Slider
+          @input="(event: Event) => emit('seek', (event.target as HTMLInputElement).valueAsNumber)"
+          :model-value="usePlayerStore().audioCurrentTime"
+          step="1"
+          :min="0"
+          :max="usePlayerStore().audioDuration" />
         <span class="time">3:37</span>
       </div>
     </div>
     <div class="player-right">
       <button class="player-button mute-button"><Speaker /></button>
-      <Slider :model-value="0.5" step=".01" :min="0" :max="1" />
+      <Slider v-model="usePlayerStore().audioVolume" step=".01" :min="0" :max="1" />
     </div>
   </footer>
 </template>
 
 <script setup lang="ts">
-import { TooltipPositioning } from '@/types';
+import { TooltipPositioning, type ITrack } from '@/types';
 import Chevron from './Icons/Chevron.vue';
 import CirclePlay from './Icons/CirclePlay.vue';
+import CirclePause from './Icons/CirclePause.vue';
 import Speaker from './Icons/Speaker.vue';
 import Slider from './Controls/Slider.vue';
 import Tooltip from './Controls/Tooltip.vue';
+import { usePlayerStore } from '@/stores/player';
+import { ref, watch } from 'vue';
+
+const emit = defineEmits(['seek', 'togglePlayPause']);
+const currentTrack = ref<ITrack>(usePlayerStore().getTrackList()[usePlayerStore().currentTrackId!]);
+
+watch(
+  () => usePlayerStore().currentTrackId,
+  () => {
+    currentTrack.value = usePlayerStore().getTrackList()[usePlayerStore().currentTrackId!];
+  },
+  { deep: true }
+);
 </script>
 
 <style scoped>
@@ -60,7 +82,7 @@ footer {
   text-overflow: ellipsis;
 }
 
-.track-img {
+.track-cover {
   aspect-ratio: 1/1;
   height: 100%;
 }

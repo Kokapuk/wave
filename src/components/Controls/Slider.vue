@@ -1,10 +1,17 @@
 <template>
   <div class="slider-container">
-    <input :min="props.min" :max="props.max" v-bind="$attrs" @input="inputHandle" :value="value" class="slider" type="range" />
+    <input
+      :min="props.min"
+      :max="props.max"
+      v-bind="$attrs"
+      @input="inputHandle"
+      :value="props.modelValue"
+      class="slider"
+      type="range" />
     <div
       :style="{
-        width: `calc(${(value - props.min) * (100 / (props.max - props.min))}% + ${
-          (6 / 100) * (100 - (value - props.min) * (100 / (props.max - props.min)))
+        width: `calc(${(props.modelValue - props.min) * (100 / (props.max - props.min))}% + ${
+          (6 / 100) * (100 - (props.modelValue - props.min) * (100 / (props.max - props.min)))
         }px`,
       }"
       :class="['slider-fill', (attrs.disabled === '' || attrs.disabled === 'true') && 'disabled']"></div>
@@ -22,12 +29,10 @@ interface IProps {
 
 const emit = defineEmits(['update:modelValue']);
 const props = defineProps<IProps>();
-const value = ref(props.modelValue);
 const attrs = useAttrs();
 
 function inputHandle(event: Event) {
-  value.value = (event.target as HTMLInputElement).valueAsNumber;
-  emit('update:modelValue', value.value);
+  emit('update:modelValue', (event.target as HTMLInputElement).valueAsNumber);
 }
 </script>
 
