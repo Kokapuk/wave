@@ -2,8 +2,12 @@
   <div class="wrapper">
     <main>
       <NavigationBar />
-      <header class="title">{{ usePlayerStore().title }}</header>
-      <div></div>
+      <div class="page-container">
+        <header class="title">{{ usePlayerStore().title }}</header>
+        <div class="view">
+          <RouterView />
+        </div>
+      </div>
     </main>
     <Player />
   </div>
@@ -34,9 +38,21 @@ main {
   padding: 21px 41px;
   font-weight: 700;
   font-size: 33px;
-  height: min-content;
   border-bottom: var(--b-seperator);
   user-select: none;
   -webkit-app-region: drag;
+}
+
+.page-container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+}
+
+.view {
+  width: 100%;
+  overflow-y: hidden;
+  height: 100%;
 }
 </style>
