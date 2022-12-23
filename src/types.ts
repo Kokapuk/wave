@@ -6,7 +6,7 @@ export const enum TooltipPositioning {
 }
 
 export interface ITrack {
-  id: number;
+  id: string;
   audio: string;
   cover: string;
   name: string;

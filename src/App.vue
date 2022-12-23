@@ -22,7 +22,7 @@
       @loadedmetadata="audioLoadHandle"
       @timeupdate="(event: Event) => usePlayerStore().audioCurrentTime = Math.floor((event.target as HTMLAudioElement).currentTime)"
       v-if="usePlayerStore().currentTrackId !== null"
-      :src="usePlayerStore().getTrackList()[usePlayerStore().currentTrackId!].audio" />
+      :src="usePlayerStore().getTrackById(usePlayerStore().currentTrackId!)!.audio" />
   </div>
 </template>
 
@@ -31,7 +31,6 @@ import { RouterLink, RouterView } from 'vue-router';
 import { usePlayerStore } from './stores/player';
 import Player from './components/Player.vue';
 import NavigationBar from './components/NavigationBar.vue';
-import type { ITrack } from './types';
 import { ref, watch } from 'vue';
 
 const audioElement = ref<HTMLAudioElement | null>(null);
@@ -45,7 +44,9 @@ watch(
 );
 
 function seekHandle(time: number) {
-  audioElement.value!.currentTime = time;
+  audioElement.value!.currentTime = audioElement.value!.duration / 2;
+  audioElement.value!.play();
+  // audioElement.value!.currentTime = time;
 }
 
 function audioLoadStartHandle(event: Event) {

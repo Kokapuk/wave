@@ -10,7 +10,12 @@
     <div class="player-middle">
       <div class="button-container">
         <Tooltip text="Previous track" :positioning="TooltipPositioning.left">
-          <button style="rotate: 180deg" class="player-button"><Chevron /></button>
+          <button
+            @click="() => usePlayerStore().currentTrackId = usePlayerStore().getPreviousTrack(usePlayerStore().currentTrackId!)!.id"
+            style="rotate: 180deg"
+            class="player-button">
+            <Chevron />
+          </button>
         </Tooltip>
 
         <button @click="() => emit('togglePlayPause')" class="player-button">
@@ -19,18 +24,22 @@
         </button>
 
         <Tooltip text="Next track" :positioning="TooltipPositioning.right">
-          <button class="player-button"><Chevron /></button>
+          <button
+            @click="() => usePlayerStore().currentTrackId = usePlayerStore().getNextTrack(usePlayerStore().currentTrackId!)!.id"
+            class="player-button">
+            <Chevron />
+          </button>
         </Tooltip>
       </div>
       <div class="timeline">
-        <span class="time">2:49</span>
+        <span class="time">{{ secondsToTimestamp(usePlayerStore().audioCurrentTime) }}</span>
         <Slider
           @input="(event: Event) => emit('seek', (event.target as HTMLInputElement).valueAsNumber)"
           :model-value="usePlayerStore().audioCurrentTime"
           step="1"
           :min="0"
           :max="usePlayerStore().audioDuration" />
-        <span class="time">3:37</span>
+        <span class="time">{{ secondsToTimestamp(usePlayerStore().audioDuration) }}</span>
       </div>
     </div>
     <div class="player-right">
@@ -52,15 +61,19 @@ import { usePlayerStore } from '@/stores/player';
 import { ref, watch } from 'vue';
 
 const emit = defineEmits(['seek', 'togglePlayPause']);
-const currentTrack = ref<ITrack>(usePlayerStore().getTrackList()[usePlayerStore().currentTrackId!]);
+const currentTrack = ref<ITrack>(usePlayerStore().getTrackById(usePlayerStore().currentTrackId!)!);
 
 watch(
   () => usePlayerStore().currentTrackId,
   () => {
-    currentTrack.value = usePlayerStore().getTrackList()[usePlayerStore().currentTrackId!];
+    currentTrack.value = usePlayerStore().getTrackById(usePlayerStore().currentTrackId!)!;
   },
   { deep: true }
 );
+
+function secondsToTimestamp(seconds: number): string {
+  return new Date(seconds * 1000).toISOString().substring(14, 19);
+}
 </script>
 
 <style scoped>
