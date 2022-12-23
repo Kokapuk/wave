@@ -1,7 +1,8 @@
 <template>
-  <div class="track-list-container">
+  <div v-if="tracks.length > 0" class="track-list-container">
     <Track v-for="track in tracks" :track="track" />
   </div>
+  <span v-else class="empty-placeholder-center">You library is empty</span>
 </template>
 
 <script lang="ts" setup>

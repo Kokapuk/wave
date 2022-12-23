@@ -1,6 +1,9 @@
 import { ref } from 'vue';
 import { defineStore } from 'pinia';
 import type { ITrack } from '@/types';
+import { useSettingsStore } from './settings';
+const fs = require('fs');
+const path = require('path');
 
 export const usePlayerStore = defineStore('player', () => {
   const title = ref('');
@@ -15,6 +18,7 @@ export const usePlayerStore = defineStore('player', () => {
 
     if (tracks === null) return [];
     else return JSON.parse(tracks);
+
     // return [
     //   {
     //     id: '0',
@@ -35,6 +39,18 @@ export const usePlayerStore = defineStore('player', () => {
 
   function setTrackList(tracks: ITrack[]) {
     localStorage.setItem('tracks', JSON.stringify(tracks));
+    fs.writeFileSync(path.join(useSettingsStore().getMusicStoragePath(), 'import-data.json'), JSON.stringify(tracks));
+  }
+
+  function clearTrackList() {
+    localStorage.removeItem('tracks');
+    fs.writeFileSync(path.join(useSettingsStore().getMusicStoragePath(), 'import-data.json'), '[]');
+  }
+
+  function deleteTrack(id: string) {
+    setTrackList(getTrackList().filter((item) => item.id !== id));
+
+    fs.rmSync(path.join(useSettingsStore().getMusicStoragePath(), id), { recursive: true, force: true });
   }
 
   function getTrackById(id: string): ITrack {
@@ -86,6 +102,8 @@ export const usePlayerStore = defineStore('player', () => {
     audioVolume,
     getTrackList,
     setTrackList,
+    clearTrackList,
+    deleteTrack,
     getTrackById,
     getPreviousTrack,
     getNextTrack,

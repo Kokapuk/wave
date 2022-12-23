@@ -22,15 +22,20 @@
 
     <button style="align-self: flex-end" class="button" type="submit">Add</button>
   </form>
+  <div v-if="loading" class="loading-container">
+    <ProgressBar :progress="progress" />
+    <span class="empty-placeholder">Loading track...</span>
+  </div>
 </template>
 
 <script lang="ts" setup>
 import { ref } from 'vue';
 import { uid } from 'uid';
+import ProgressBar from '../components/Controls/ProgressBar.vue';
 import { usePlayerStore } from '../stores/player';
 import type { ITrack } from '@/types';
+import { useSettingsStore } from '@/stores/settings';
 const Downloader = require('nodejs-file-downloader');
-const { app } = require('@electron/remote');
 const path = require('path');
 const fs = require('fs');
 
@@ -38,15 +43,22 @@ const audio = ref<string>('');
 const cover = ref<string>('');
 const name = ref<string>('');
 const author = ref<string>('');
+const loading = ref(false);
+const progress = ref(0);
 
 async function submitHandle() {
   const trackId = uid(12);
-  const trackPath = path.join(app.getPath('userData'), 'music', trackId);
+  const trackPath = path.join(useSettingsStore().getMusicStoragePath(), trackId);
   let downloadSuccesfull = true;
+
+  loading.value = true;
 
   let downloader = new Downloader({
     url: audio.value,
     directory: trackPath,
+    onProgress: (percentage: number) => {
+      progress.value = percentage;
+    },
   });
 
   try {
@@ -57,11 +69,15 @@ async function submitHandle() {
   } catch (error) {
     console.log('Audio download failed', error);
     downloadSuccesfull = false;
+    loading.value = false;
   }
 
   downloader = new Downloader({
     url: cover.value,
     directory: trackPath,
+    onProgress: (percentage: number) => {
+      progress.value = percentage;
+    },
   });
 
   try {
@@ -72,6 +88,7 @@ async function submitHandle() {
   } catch (error) {
     console.log('Cover download failed', error);
     downloadSuccesfull = false;
+    loading.value = false;
   }
 
   if (downloadSuccesfull) {
@@ -84,11 +101,14 @@ async function submitHandle() {
     };
 
     usePlayerStore().setTrackList([track, ...usePlayerStore().getTrackList()]);
-    fs.writeFileSync(
-      path.join(app.getPath('userData'), 'music', 'import-data.json'),
-      JSON.stringify([track, ...usePlayerStore().getTrackList()])
-    );
   }
+
+  audio.value = '';
+  cover.value = '';
+  name.value = '';
+  author.value = '';
+
+  loading.value = false;
 }
 </script>
 
@@ -124,5 +144,20 @@ async function submitHandle() {
 
 .param-input:invalid {
   border-color: firebrick;
+}
+
+.loading-container {
+  position: absolute;
+  display: flex;
+  flex-direction: column;
+  left: 0;
+  top: 0;
+  background-color: rgb(var(--bg));
+  height: 100%;
+  width: 100%;
+  padding: 0 50px;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
 }
 </style>

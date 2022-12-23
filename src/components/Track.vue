@@ -6,6 +6,9 @@
       :style="{ backgroundImage: `url('file://${replaceAll(props.track.cover, '\\', '/')}')` }">
       <CirclePlay class="play-icon" />
     </button>
+    <button @click="deleteClickHandle" class="button-delete">
+      <Close />
+    </button>
     <span :class="['track-name', { active: props.track.id === usePlayerStore().currentTrackId }]">{{ props.track.name }}</span>
     <span :class="['track-author', { active: props.track.id === usePlayerStore().currentTrackId }]">
       {{ props.track.author }}
@@ -16,7 +19,9 @@
 <script setup lang="ts">
 import type { ITrack } from '@/types';
 import CirclePlay from './Icons/CirclePlay.vue';
+import Close from './Icons/Close.vue';
 import { usePlayerStore } from '../stores/player';
+import router from '@/router';
 
 interface IProps {
   track: ITrack;
@@ -31,10 +36,20 @@ function replaceAll(str: string, strToReplace: string, strToReplaceWith: string)
 
   return str;
 }
+
+function deleteClickHandle(event: MouseEvent) {
+  usePlayerStore().currentTrackId = null;
+
+  setTimeout(() => {
+    usePlayerStore().deleteTrack(props.track.id);
+    router.go(0);
+  }, 100);
+}
 </script>
 
 <style scoped>
 .track {
+  position: relative;
   display: inline-flex;
   flex-direction: column;
   gap: 5px;
@@ -66,6 +81,24 @@ function replaceAll(str: string, strToReplace: string, strToReplaceWith: string)
 
 .track-cover:active .play-icon {
   background-color: rgb(0, 0, 0, 0.4);
+}
+
+.button-delete {
+  position: absolute;
+  height: 12.5%;
+  width: 12.5%;
+  right: -12.5%;
+  top: -12.5%;
+  background-color: transparent;
+  cursor: pointer;
+  opacity: 0;
+  transition: var(--transition);
+}
+
+.track:hover .button-delete {
+  right: 2%;
+  top: 0;
+  opacity: 1;
 }
 
 .track-name {

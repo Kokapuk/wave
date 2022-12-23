@@ -9,23 +9,34 @@
 </template>
 
 <script setup lang="ts">
+import { usePlayerStore } from '@/stores/player';
 import { useSettingsStore } from '@/stores/settings';
 import { ref } from 'vue';
 const { dialog, getCurrentWindow } = require('@electron/remote');
+const fs = require('fs');
+const path = require('path');
 
 const musicStoragePath = ref(useSettingsStore().getMusicStoragePath());
 
 function chooseClickHandle() {
-  const path: string | undefined = dialog.showOpenDialogSync(getCurrentWindow(), {
+  const selectedPath: string[] | undefined = dialog.showOpenDialogSync(getCurrentWindow(), {
     title: 'Chosing music storage path',
     buttonLabel: 'Choose',
     properties: ['openDirectory'],
   });
 
-  if (path === undefined) return;
+  if (selectedPath === undefined) return;
 
-  musicStoragePath.value = path;
-  useSettingsStore().setMusicStoragePath(path);
+  musicStoragePath.value = selectedPath[0];
+  useSettingsStore().setMusicStoragePath(selectedPath[0]);
+
+  console.log(path.join(musicStoragePath.value, 'import-data.json'));
+
+  if (fs.existsSync(path.join(musicStoragePath.value, 'import-data.json'))) {
+    usePlayerStore().setTrackList(JSON.parse(fs.readFileSync(path.join(musicStoragePath.value, 'import-data.json'))));
+  } else {
+    usePlayerStore().clearTrackList();
+  }
 }
 </script>
 

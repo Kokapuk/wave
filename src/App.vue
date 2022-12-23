@@ -22,8 +22,7 @@
       @loadedmetadata="audioLoadHandle"
       @timeupdate="(event: Event) => usePlayerStore().audioCurrentTime = Math.floor((event.target as HTMLAudioElement).currentTime)"
       @ended="endedHandle"
-      v-if="usePlayerStore().currentTrackId !== null"
-      :src="usePlayerStore().getTrackById(usePlayerStore().currentTrackId!).audio" />
+      :src="usePlayerStore().currentTrackId === null ? undefined : usePlayerStore().getTrackById(usePlayerStore().currentTrackId!).audio" />
   </div>
 </template>
 
@@ -101,5 +100,6 @@ main {
 .view {
   overflow-y: auto;
   height: 100%;
+  position: relative;
 }
 </style>
