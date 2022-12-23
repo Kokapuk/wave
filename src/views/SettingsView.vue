@@ -3,15 +3,30 @@
     <div class="param-container">
       <span class="param-title">Music storage path</span>
       <input :value="musicStoragePath" class="param-input" readonly />
-      <button class="button">Choose</button>
+      <button @click="chooseClickHandle" class="button">Choose</button>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
+import { useSettingsStore } from '@/stores/settings';
 import { ref } from 'vue';
+const { dialog, getCurrentWindow } = require('@electron/remote');
 
-const musicStoragePath = ref('C:\\users\\Abdul');
+const musicStoragePath = ref(useSettingsStore().getMusicStoragePath());
+
+function chooseClickHandle() {
+  const path: string | undefined = dialog.showOpenDialogSync(getCurrentWindow(), {
+    title: 'Chosing music storage path',
+    buttonLabel: 'Choose',
+    properties: ['openDirectory'],
+  });
+
+  if (path === undefined) return;
+
+  musicStoragePath.value = path;
+  useSettingsStore().setMusicStoragePath(path);
+}
 </script>
 
 <style scoped>
