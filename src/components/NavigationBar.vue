@@ -7,6 +7,7 @@
     <div class="links">
       <RouterLink class="nav-link" to="/"><Squares class="nav-link-icon" /> Your Library</RouterLink>
       <RouterLink class="nav-link" to="/add"><Plus class="nav-link-icon" /> Add</RouterLink>
+      <RouterLink class="nav-link" to="/settings"><Gear class="nav-link-icon" /> Settings</RouterLink>
     </div>
   </div>
 </template>
@@ -14,6 +15,7 @@
 <script setup lang="ts">
 import Logo from './Icons/Logo.vue';
 import Plus from './Icons/Plus.vue';
+import Gear from './Icons/Gear.vue';
 import Squares from './Icons/Squares.vue';
 </script>
 

@@ -9,8 +9,7 @@ body,
 
 .button {
   font-size: 18px;
-  padding: 5px 15px;
-  width: min-content;
+  padding: 10px 20px;
   cursor: pointer;
   background-color: rgb(var(--accent));
   border-radius: var(--b-radius);

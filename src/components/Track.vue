@@ -3,7 +3,7 @@
     <button
       @click="() => (usePlayerStore().currentTrackId = track.id)"
       class="track-cover"
-      :style="{ backgroundImage: `url(${props.track.cover})` }">
+      :style="{ backgroundImage: `url('file://${replaceAll(props.track.cover, '\\', '/')}')` }">
       <CirclePlay class="play-icon" />
     </button>
     <span :class="['track-name', { active: props.track.id === usePlayerStore().currentTrackId }]">{{ props.track.name }}</span>
@@ -23,6 +23,14 @@ interface IProps {
 }
 
 const props = defineProps<IProps>();
+
+function replaceAll(str: string, strToReplace: string, strToReplaceWith: string): string {
+  while (str.includes(strToReplace)) {
+    str = str.replace(strToReplace, strToReplaceWith);
+  }
+
+  return str;
+}
 </script>
 
 <style scoped>
