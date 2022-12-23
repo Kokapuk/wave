@@ -4,7 +4,7 @@
       <Logo class="logo" />
       <span class="logo-text">Wave</span>
     </div>
-    <div>
+    <div class="links">
       <RouterLink class="nav-link" to="/"><Squares class="nav-link-icon" /> Your Library</RouterLink>
       <RouterLink class="nav-link" to="/add"><Plus class="nav-link-icon" /> Add</RouterLink>
     </div>
@@ -47,6 +47,12 @@ import Squares from './Icons/Squares.vue';
   font-size: 31px;
 }
 
+.links {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
 .nav-link {
   display: flex;
   padding: 11px 18px;
@@ -58,7 +64,7 @@ import Squares from './Icons/Squares.vue';
   color: rgb(var(--accent));
   align-items: center;
   gap: 13px;
-  transition: rgb(var(--transition));
+  transition: var(--transition);
 }
 
 .nav-link.router-link-active {

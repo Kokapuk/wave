@@ -6,8 +6,10 @@
       :style="{ backgroundImage: `url(${props.track.cover})` }">
       <CirclePlay class="play-icon" />
     </button>
-    <span class="track-name">{{ props.track.name }}</span>
-    <span class="track-author">{{ props.track.author }}</span>
+    <span :class="['track-name', { active: props.track.id === usePlayerStore().currentTrackId }]">{{ props.track.name }}</span>
+    <span :class="['track-author', { active: props.track.id === usePlayerStore().currentTrackId }]">
+      {{ props.track.author }}
+    </span>
   </div>
 </template>
 
@@ -36,37 +38,26 @@ const props = defineProps<IProps>();
   background-position: center center;
   background-repeat: no-repeat;
   background-size: cover;
-  border-radius: var(--b-radius-small);
+  border-radius: var(--b-radius);
   cursor: pointer;
   position: relative;
   overflow: hidden;
 }
 
-.track-cover::before {
-  content: '';
-  position: absolute;
-  left: 0;
-  top: 0;
-  height: 100%;
-  width: 100%;
-  background-color: black;
-  opacity: 0;
-  transition: var(--transition);
-}
-
-.track-cover:hover::before {
-  opacity: 0.2;
-}
-
 .play-icon {
-  height: 20%;
+  padding: 40%;
   opacity: 0;
   transition: var(--transition);
+  background-color: rgb(0, 0, 0, 0.2);
 }
 
 .track-cover:hover .play-icon {
-  height: 25%;
+  scale: 1.2;
   opacity: 1;
+}
+
+.track-cover:active .play-icon {
+  background-color: rgb(0, 0, 0, 0.4);
 }
 
 .track-name {
@@ -74,9 +65,17 @@ const props = defineProps<IProps>();
   font-size: 13px;
 }
 
+.track-name.active {
+  color: rgb(var(--accent));
+}
+
 .track-author {
   font-weight: 700;
   font-size: 13px;
   color: rgb(var(--font-color-dark));
+}
+
+.track-author.active {
+  color: rgb(var(--accent));
 }
 </style>

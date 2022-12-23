@@ -21,8 +21,9 @@
       @loadstart="audioLoadStartHandle"
       @loadedmetadata="audioLoadHandle"
       @timeupdate="(event: Event) => usePlayerStore().audioCurrentTime = Math.floor((event.target as HTMLAudioElement).currentTime)"
+      @ended="endedHandle"
       v-if="usePlayerStore().currentTrackId !== null"
-      :src="usePlayerStore().getTrackById(usePlayerStore().currentTrackId!)!.audio" />
+      :src="usePlayerStore().getTrackById(usePlayerStore().currentTrackId!).audio" />
   </div>
 </template>
 
@@ -59,6 +60,10 @@ function audioLoadHandle(event: Event) {
   playerStore.audioCurrentTime = 0;
 
   audioElement.value!.play();
+}
+
+function endedHandle() {
+  usePlayerStore().currentTrackId = usePlayerStore().getNextTrack(usePlayerStore().currentTrackId!).id;
 }
 </script>
 

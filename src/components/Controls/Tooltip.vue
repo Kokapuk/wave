@@ -39,7 +39,7 @@ const props = defineProps<IProps>();
   border: var(--tooltip__border-width) solid rgb(var(--font-color), var(--tooltip__border-opacity));
   color: rgb(var(--font-color));
   padding: 5px 10px;
-  border-radius: var(--b-radius-small);
+  border-radius: var(--b-radius);
   position: absolute;
   z-index: 1;
   opacity: 0;

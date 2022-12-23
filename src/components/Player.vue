@@ -11,7 +11,7 @@
       <div class="button-container">
         <Tooltip text="Previous track" :positioning="TooltipPositioning.left">
           <button
-            @click="() => usePlayerStore().currentTrackId = usePlayerStore().getPreviousTrack(usePlayerStore().currentTrackId!)!.id"
+            @click="() => usePlayerStore().currentTrackId = usePlayerStore().getPreviousTrack(usePlayerStore().currentTrackId!).id"
             style="rotate: 180deg"
             class="player-button">
             <Chevron />
@@ -25,7 +25,7 @@
 
         <Tooltip text="Next track" :positioning="TooltipPositioning.right">
           <button
-            @click="() => usePlayerStore().currentTrackId = usePlayerStore().getNextTrack(usePlayerStore().currentTrackId!)!.id"
+            @click="() => usePlayerStore().currentTrackId = usePlayerStore().getNextTrack(usePlayerStore().currentTrackId!).id"
             class="player-button">
             <Chevron />
           </button>
@@ -61,12 +61,12 @@ import { usePlayerStore } from '@/stores/player';
 import { ref, watch } from 'vue';
 
 const emit = defineEmits(['seek', 'togglePlayPause']);
-const currentTrack = ref<ITrack>(usePlayerStore().getTrackById(usePlayerStore().currentTrackId!)!);
+const currentTrack = ref<ITrack>(usePlayerStore().getTrackById(usePlayerStore().currentTrackId!));
 
 watch(
   () => usePlayerStore().currentTrackId,
   () => {
-    currentTrack.value = usePlayerStore().getTrackById(usePlayerStore().currentTrackId!)!;
+    currentTrack.value = usePlayerStore().getTrackById(usePlayerStore().currentTrackId!);
   },
   { deep: true }
 );

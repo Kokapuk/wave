@@ -3,7 +3,7 @@ import { defineStore } from 'pinia';
 import type { ITrack } from '@/types';
 
 export const usePlayerStore = defineStore('player', () => {
-  const title = ref('Your Library');
+  const title = ref('');
   const currentTrackId = ref<string | null>(null);
   const audioIsPaused = ref(true);
   const audioDuration = ref(0);
@@ -33,13 +33,13 @@ export const usePlayerStore = defineStore('player', () => {
     ];
   }
 
-  function getTrackById(id: string): ITrack | undefined {
+  function getTrackById(id: string): ITrack {
     const tracks = getTrackList();
 
-    return tracks.find((item) => item.id === id);
+    return tracks.find((item) => item.id === id)!;
   }
 
-  function getPreviousTrack(id: string): ITrack | undefined {
+  function getPreviousTrack(id: string): ITrack {
     const tracks = getTrackList();
     let previousTrack: ITrack | undefined = undefined;
 
@@ -50,12 +50,12 @@ export const usePlayerStore = defineStore('player', () => {
       previousTrack = tracks.at(i - 1);
     }
 
-    return previousTrack;
+    return previousTrack!;
   }
 
-  function getNextTrack(id: string): ITrack | undefined {
+  function getNextTrack(id: string): ITrack {
     const tracks = getTrackList();
-    let nextTrack: ITrack | undefined = undefined;
+    let nextTrack: ITrack;
 
     for (let i = 0; i < tracks.length; i++) {
       const track = tracks[i];
@@ -70,7 +70,7 @@ export const usePlayerStore = defineStore('player', () => {
       nextTrack = tracks[nextTrackId];
     }
 
-    return nextTrack;
+    return nextTrack!;
   }
 
   return {

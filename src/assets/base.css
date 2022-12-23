@@ -5,13 +5,12 @@
   --bg-light: 37, 37, 37;
   --font-color: 243, 244, 246;
   --font-color-dark: 107, 114, 128;
-  --accent: 180, 254, 23;
+  --accent: 32, 178, 170;
   --gray: 55, 55, 55;
   --light-gray: 57, 57, 59;
 
-  --b-radius: 9px;
-  --b-radius-small: 4px;
-  --b-seperator: 2px solid #363636;
+  --b-radius: 5px;
+  --b-seperator: 1px solid #363636;
 
   --transition: 200ms all;
 }
