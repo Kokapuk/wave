@@ -44,9 +44,7 @@ watch(
 );
 
 function seekHandle(time: number) {
-  audioElement.value!.currentTime = audioElement.value!.duration / 2;
-  audioElement.value!.play();
-  // audioElement.value!.currentTime = time;
+  audioElement.value!.currentTime = time;
 }
 
 function audioLoadStartHandle(event: Event) {
