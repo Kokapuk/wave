@@ -27,16 +27,16 @@ function createWindow() {
 
   require('@electron/remote/main').enable(mainWindow.webContents);
 
-  if (isDev) {
-    mainWindow.loadURL('http://localhost:5173/');
+  if (!isDev) {
+    mainWindow.loadURL(`file://${path.join(__dirname, './dist/vue/index.html')}`);
   } else {
-    mainWindow.loadFile(path.join(__dirname, './dist/vue/index.html'));
+    mainWindow.loadURL('http://localhost:5173/');
+    // mainWindow.loadURL(`file://D:\\JS-TS\\Apps\\wave\\dist\\vue\\index.html`);
   }
 }
 
 app.whenReady().then(() => {
   createWindow();
-  mainWindow.openDevTools();
 
   app.on('activate', () => {
     if (BrowserWindow.getAllWindows().length === 0) {

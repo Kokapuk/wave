@@ -11,6 +11,7 @@
 <script setup lang="ts">
 import { usePlayerStore } from '@/stores/player';
 import { useSettingsStore } from '@/stores/settings';
+import type { ITrack } from '@/types';
 import { ref } from 'vue';
 const { dialog, getCurrentWindow } = require('@electron/remote');
 const fs = require('fs');
@@ -30,10 +31,8 @@ function chooseClickHandle() {
   musicStoragePath.value = selectedPath[0];
   useSettingsStore().setMusicStoragePath(selectedPath[0]);
 
-  console.log(path.join(musicStoragePath.value, 'import-data.json'));
-
   if (fs.existsSync(path.join(musicStoragePath.value, 'import-data.json'))) {
-    usePlayerStore().setTrackList(JSON.parse(fs.readFileSync(path.join(musicStoragePath.value, 'import-data.json'))));
+    usePlayerStore().importTracks(musicStoragePath.value);
   } else {
     usePlayerStore().clearTrackList();
   }
@@ -57,7 +56,7 @@ function chooseClickHandle() {
 .param-title {
   color: rgb(var(--font-color-dark));
   font-size: 18px;
-  width: 20%;
+  width: 250px;
   font-weight: 600;
 }
 
@@ -72,6 +71,6 @@ function chooseClickHandle() {
 }
 
 .button {
-  width: 15%;
+  width: 150px;
 }
 </style>

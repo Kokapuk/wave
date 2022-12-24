@@ -3,7 +3,7 @@
     <button
       @click="() => (usePlayerStore().currentTrackId = track.id)"
       class="track-cover"
-      :style="{ backgroundImage: `url('file://${replaceAll(props.track.cover, '\\', '/')}')` }">
+      :style="{ backgroundImage: `url('file://${props.track.cover.replaceAll('\\', '/')}')` }">
       <CirclePlay class="play-icon" />
     </button>
     <button @click="deleteClickHandle" class="button-delete">
@@ -17,11 +17,11 @@
 </template>
 
 <script setup lang="ts">
-import type { ITrack } from '@/types';
 import CirclePlay from './Icons/CirclePlay.vue';
 import Close from './Icons/Close.vue';
 import { usePlayerStore } from '../stores/player';
 import router from '@/router';
+import type { ITrack } from '@/types';
 
 interface IProps {
   track: ITrack;
@@ -29,15 +29,7 @@ interface IProps {
 
 const props = defineProps<IProps>();
 
-function replaceAll(str: string, strToReplace: string, strToReplaceWith: string): string {
-  while (str.includes(strToReplace)) {
-    str = str.replace(strToReplace, strToReplaceWith);
-  }
-
-  return str;
-}
-
-function deleteClickHandle(event: MouseEvent) {
+function deleteClickHandle() {
   usePlayerStore().currentTrackId = null;
 
   setTimeout(() => {
@@ -53,6 +45,7 @@ function deleteClickHandle(event: MouseEvent) {
   display: inline-flex;
   flex-direction: column;
   gap: 5px;
+  overflow: hidden;
 }
 
 .track-cover {
@@ -104,6 +97,7 @@ function deleteClickHandle(event: MouseEvent) {
 .track-name {
   font-weight: 700;
   font-size: 13px;
+  transition: var(--transition);
 }
 
 .track-name.active {
@@ -114,6 +108,7 @@ function deleteClickHandle(event: MouseEvent) {
   font-weight: 700;
   font-size: 13px;
   color: rgb(var(--font-color-dark));
+  transition: var(--transition);
 }
 
 .track-author.active {

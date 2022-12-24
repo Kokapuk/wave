@@ -8,8 +8,11 @@
 <script lang="ts" setup>
 import Track from '@/components/Track.vue';
 import { usePlayerStore } from '@/stores/player';
+import { useSettingsStore } from '@/stores/settings';
 import type { ITrack } from '@/types';
 import { ref } from 'vue';
+
+usePlayerStore().importTracks(useSettingsStore().getMusicStoragePath());
 
 const tracks = ref<ITrack[]>(usePlayerStore().getTrackList());
 </script>
@@ -20,5 +23,6 @@ const tracks = ref<ITrack[]>(usePlayerStore().getTrackList());
   flex-wrap: wrap;
   padding: 45px;
   gap: 20px;
+  justify-content: center;
 }
 </style>

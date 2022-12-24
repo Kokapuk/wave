@@ -24,7 +24,7 @@
   </form>
   <div v-if="loading" class="loading-container">
     <ProgressBar :progress="progress" />
-    <span class="empty-placeholder">Loading track...</span>
+    <span class="empty-placeholder">Downloading the track...</span>
   </div>
 </template>
 

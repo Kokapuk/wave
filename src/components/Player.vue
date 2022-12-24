@@ -43,8 +43,11 @@
       </div>
     </div>
     <div class="player-right">
-      <button class="player-button mute-button"><Speaker /></button>
-      <Slider v-model="usePlayerStore().audioVolume" step=".01" :min="0" :max="1" />
+      <button @click="() => (usePlayerStore().audioMuted = !usePlayerStore().audioMuted)" class="player-button mute-button">
+        <SpeakerMuted v-if="usePlayerStore().audioMuted || usePlayerStore().audioVolume === 0" />
+        <Speaker v-else />
+      </button>
+      <Slider v-model="usePlayerStore().audioVolume" @change="volumeSliderChangeHandle" step=".01" :min="0" :max="1" />
     </div>
   </footer>
 </template>
@@ -55,13 +58,19 @@ import Chevron from './Icons/Chevron.vue';
 import CirclePlay from './Icons/CirclePlay.vue';
 import CirclePause from './Icons/CirclePause.vue';
 import Speaker from './Icons/Speaker.vue';
+import SpeakerMuted from './Icons/SpeakerMuted.vue';
 import Slider from './Controls/Slider.vue';
 import Tooltip from './Controls/Tooltip.vue';
 import { usePlayerStore } from '@/stores/player';
-import { ref, watch } from 'vue';
+import { onMounted, ref, watch } from 'vue';
+import { useSettingsStore } from '@/stores/settings';
 
 const emit = defineEmits(['seek', 'togglePlayPause']);
 const currentTrack = ref<ITrack>(usePlayerStore().getTrackById(usePlayerStore().currentTrackId!));
+
+onMounted(() => {
+  usePlayerStore().audioVolume = useSettingsStore().getVolume();
+});
 
 watch(
   () => usePlayerStore().currentTrackId,
@@ -73,6 +82,10 @@ watch(
 
 function secondsToTimestamp(seconds: number): string {
   return new Date(seconds * 1000).toISOString().substring(14, 19);
+}
+
+function volumeSliderChangeHandle(event: Event) {
+  useSettingsStore().setVolume((event.target as HTMLInputElement).valueAsNumber);
 }
 </script>
 
@@ -129,10 +142,6 @@ footer {
   height: 35px;
   gap: 9px;
   justify-content: center;
-}
-
-.icon {
-  fill: #8c8c8c;
 }
 
 .player-button {
