@@ -10,7 +10,8 @@
   --light-gray: 57, 57, 59;
 
   --b-radius: 5px;
-  --b-seperator: 1px solid #363636;
+  --b-seperator-color: #363636;
+  --b-seperator: 1px solid var(--b-seperator-color);
 
   --transition: 200ms all;
 }
@@ -41,12 +42,6 @@ body,
 #app {
   color-scheme: dark;
   height: 100vh;
-  background-color: transparent;
-}
-
-#app {
-  border-radius: 25px;
-  overflow: hidden;
 }
 
 .button {

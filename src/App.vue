@@ -1,4 +1,5 @@
 <template>
+  <div v-if="!windowMaximized" class="window-border"></div>
   <div class="wrapper">
     <main>
       <NavigationBar />
@@ -39,8 +40,10 @@ import { useSettingsStore } from './stores/settings';
 import router from './router';
 const path = require('path');
 const fs = require('fs');
+const { getCurrentWindow } = require('@electron/remote');
 
 const audioElement = ref<HTMLAudioElement | null>(null);
+const windowMaximized = ref(false);
 
 onMounted(() => {
   if (!fs.existsSync(useSettingsStore().defaultMusicStoragePath)) {
@@ -55,6 +58,9 @@ onMounted(() => {
     localStorage.clear();
     router.go(0);
   }
+
+  getCurrentWindow().on('maximize', () => (windowMaximized.value = true));
+  getCurrentWindow().on('unmaximize', () => (windowMaximized.value = false));
 });
 
 watch(
@@ -101,6 +107,16 @@ function endedHandle() {
 </script>
 
 <style scoped>
+.window-border {
+  z-index: 5;
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  box-shadow: inset 0px 0px 0px 1px var(--b-seperator-color);
+}
+
 .wrapper {
   display: flex;
   height: 100vh;

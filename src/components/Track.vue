@@ -6,7 +6,7 @@
       :style="{ backgroundImage: `url('file://${props.track.cover.replaceAll('\\', '/')}')` }">
       <CirclePlay class="play-icon" />
     </button>
-    <button @click="deleteClickHandle" class="button-delete">
+    <button @click="deleteClickHandle" class="button-remove">
       <Close />
     </button>
     <span :class="['track-name', { active: props.track.id === usePlayerStore().currentTrackId }]">{{ props.track.name }}</span>
@@ -76,7 +76,7 @@ function deleteClickHandle() {
   background-color: rgb(0, 0, 0, 0.4);
 }
 
-.button-delete {
+.button-remove {
   position: absolute;
   height: 12.5%;
   width: 12.5%;
@@ -88,7 +88,7 @@ function deleteClickHandle() {
   transition: var(--transition);
 }
 
-.track:hover .button-delete {
+.track:hover .button-remove {
   right: 2%;
   top: 0;
   opacity: 1;
