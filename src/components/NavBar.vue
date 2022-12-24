@@ -69,6 +69,10 @@ import Squares from './Icons/Squares.vue';
   transition: var(--transition);
 }
 
+.nav-link:hover {
+  background-color: #39393b;
+}
+
 .nav-link.router-link-active {
   background-color: #39393b;
 }

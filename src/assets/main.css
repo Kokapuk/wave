@@ -21,6 +21,7 @@
   outline: 0;
   border: 0;
   box-sizing: border-box;
+  -webkit-box-sizing: border-box;
   color: rgb(var(--font-color));
   font-family: 'Inter', sans-serif;
 }
@@ -40,6 +41,12 @@ body,
 #app {
   color-scheme: dark;
   height: 100vh;
+  background-color: transparent;
+}
+
+#app {
+  border-radius: 25px;
+  overflow: hidden;
 }
 
 .button {

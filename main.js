@@ -10,12 +10,14 @@ function createWindow() {
   mainWindow = new BrowserWindow({
     width: 1000,
     height: 600,
-    titleBarStyle: 'hidden',
-    titleBarOverlay: {
-      symbolColor: '#20b2aa',
-      color: '#1f1f1f',
-      height: 30,
-    },
+    transparent: true,
+    frame: false,
+    // titleBarStyle: 'hidden',
+    // titleBarOverlay: {
+    //   symbolColor: '#20b2aa',
+    //   color: '#1f1f1f',
+    //   height: 30,
+    // },
     backgroundColor: '#1f1f1f',
     autoHideMenuBar: true,
     webPreferences: {

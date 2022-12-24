@@ -43,10 +43,12 @@
       </div>
     </div>
     <div class="player-right">
-      <button @click="() => (usePlayerStore().audioMuted = !usePlayerStore().audioMuted)" class="player-button mute-button">
-        <SpeakerMuted v-if="usePlayerStore().audioMuted || usePlayerStore().audioVolume === 0" />
-        <Speaker v-else />
-      </button>
+      <Tooltip :text="usePlayerStore().audioMuted ? 'Unmute' : 'Mute'" :positioning="TooltipPositioning.top">
+        <button @click="() => (usePlayerStore().audioMuted = !usePlayerStore().audioMuted)" class="player-button mute-button">
+          <SpeakerMuted v-if="usePlayerStore().audioMuted || usePlayerStore().audioVolume === 0" />
+          <Speaker v-else />
+        </button>
+      </Tooltip>
       <Slider v-model="usePlayerStore().audioVolume" @change="volumeSliderChangeHandle" step=".01" :min="0" :max="1" />
     </div>
   </footer>
