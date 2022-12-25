@@ -10,5 +10,5 @@ export interface ITrack {
   audio: string;
   cover: string;
   name: string;
-  author: string;
+  artist: string;
 }

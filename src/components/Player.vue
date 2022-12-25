@@ -2,9 +2,9 @@
   <footer>
     <div class="player-left">
       <img class="track-cover" :src="currentTrack.cover" />
-      <div class="track-name-author">
+      <div class="track-name-artist">
         <span class="track-name">{{ currentTrack.name }}</span>
-        <span class="track-author">{{ currentTrack.author }}</span>
+        <span class="track-artist">{{ currentTrack.artist }}</span>
       </div>
     </div>
     <div class="player-middle">
@@ -115,7 +115,7 @@ footer {
   height: 100%;
 }
 
-.track-name-author {
+.track-name-artist {
   display: inline-flex;
   flex-direction: column;
   justify-content: center;
@@ -126,7 +126,7 @@ footer {
   font-weight: 500;
 }
 
-.track-author {
+.track-artist {
   font-size: 13px;
   font-weight: 400;
   color: rgb(var(--font-color-dark));

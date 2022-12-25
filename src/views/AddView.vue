@@ -16,8 +16,8 @@
     </div>
 
     <div class="param-container">
-      <span class="param-title">Author</span>
-      <input v-model="author" type="text" class="param-input" required />
+      <span class="param-title">Artist</span>
+      <input v-model="artist" type="text" class="param-input" required />
     </div>
 
     <button style="align-self: flex-end" class="button" type="submit">Add</button>
@@ -42,7 +42,7 @@ const fs = require('fs');
 const audio = ref<string>('');
 const cover = ref<string>('');
 const name = ref<string>('');
-const author = ref<string>('');
+const artist = ref<string>('');
 const loading = ref(false);
 const progress = ref(0);
 
@@ -97,7 +97,7 @@ async function submitHandle() {
       audio: path.join(trackPath, 'audio.mp3'),
       cover: path.join(trackPath, 'cover.png'),
       name: name.value,
-      author: author.value,
+      artist: artist.value,
     };
 
     usePlayerStore().setTrackList([track, ...usePlayerStore().getTrackList()]);
@@ -106,7 +106,7 @@ async function submitHandle() {
   audio.value = '';
   cover.value = '';
   name.value = '';
-  author.value = '';
+  artist.value = '';
 
   loading.value = false;
 }
@@ -140,10 +140,6 @@ async function submitHandle() {
   background-color: rgb(var(--light-gray));
   border: 1px solid transparent;
   transition: var(--transition);
-}
-
-.param-input:invalid {
-  border-color: firebrick;
 }
 
 .loading-container {

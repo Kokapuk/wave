@@ -10,8 +10,8 @@
       <Close />
     </button>
     <span :class="['track-name', { active: props.track.id === usePlayerStore().currentTrackId }]">{{ props.track.name }}</span>
-    <span :class="['track-author', { active: props.track.id === usePlayerStore().currentTrackId }]">
-      {{ props.track.author }}
+    <span :class="['track-artist', { active: props.track.id === usePlayerStore().currentTrackId }]">
+      {{ props.track.artist }}
     </span>
   </div>
 </template>
@@ -104,14 +104,14 @@ function deleteClickHandle() {
   color: rgb(var(--accent));
 }
 
-.track-author {
+.track-artist {
   font-weight: 700;
   font-size: 13px;
   color: rgb(var(--font-color-dark));
   transition: var(--transition);
 }
 
-.track-author.active {
+.track-artist.active {
   color: rgb(var(--accent));
 }
 </style>
