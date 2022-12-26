@@ -9,47 +9,54 @@
     </div>
     <div class="player-middle">
       <div class="button-container">
-        <Tooltip text="Previous track" :positioning="TooltipPositioning.left">
+        <Tooltip :text="playerStore.audioLoop ? 'Don\'t loop track' : 'Loop track'" :positioning="TooltipPositioning.top">
+          <button @click="() => (playerStore.audioLoop = !playerStore.audioLoop)" class="player-button small">
+            <SquareArrows :class="{ 'loop-active': playerStore.audioLoop }" />
+          </button>
+        </Tooltip>
+
+        <Tooltip text="Previous track" :positioning="TooltipPositioning.top">
           <button
-            @click="() => usePlayerStore().currentTrackId = usePlayerStore().getPreviousTrack(usePlayerStore().currentTrackId!).id"
+            @click="() => playerStore.currentTrackId = playerStore.getPreviousTrack(playerStore.currentTrackId!).id"
             style="rotate: 180deg"
-            class="player-button">
+            class="player-button small">
             <Chevron />
           </button>
         </Tooltip>
 
         <button @click="() => emit('togglePlayPause')" class="player-button">
-          <CirclePlay v-if="usePlayerStore().audioIsPaused" />
+          <CirclePlay v-if="playerStore.audioIsPaused" />
           <CirclePause v-else />
         </button>
 
-        <Tooltip text="Next track" :positioning="TooltipPositioning.right">
+        <Tooltip text="Next track" :positioning="TooltipPositioning.top">
           <button
-            @click="() => usePlayerStore().currentTrackId = usePlayerStore().getNextTrack(usePlayerStore().currentTrackId!).id"
-            class="player-button">
+            @click="() => playerStore.currentTrackId = playerStore.getNextTrack(playerStore.currentTrackId!).id"
+            class="player-button small">
             <Chevron />
           </button>
         </Tooltip>
       </div>
       <div class="timeline">
-        <span class="time">{{ secondsToTimestamp(usePlayerStore().audioCurrentTime) }}</span>
+        <span class="slider-value">{{ secondsToTimestamp(playerStore.audioCurrentTime) }}</span>
         <Slider
           @input="(event: Event) => emit('seek', (event.target as HTMLInputElement).valueAsNumber)"
-          :model-value="usePlayerStore().audioCurrentTime"
+          :model-value="playerStore.audioCurrentTime"
           step="1"
           :min="0"
-          :max="usePlayerStore().audioDuration" />
-        <span class="time">{{ secondsToTimestamp(usePlayerStore().audioDuration) }}</span>
+          :max="playerStore.audioDuration" />
+        <span class="slider-value">{{ secondsToTimestamp(playerStore.audioDuration) }}</span>
       </div>
     </div>
     <div class="player-right">
-      <Tooltip :text="usePlayerStore().audioMuted ? 'Unmute' : 'Mute'" :positioning="TooltipPositioning.top">
-        <button @click="() => (usePlayerStore().audioMuted = !usePlayerStore().audioMuted)" class="player-button mute-button">
-          <SpeakerMuted v-if="usePlayerStore().audioMuted || usePlayerStore().audioVolume === 0" />
+      <Tooltip :text="playerStore.audioMuted ? 'Unmute' : 'Mute'" :positioning="TooltipPositioning.top">
+        <button @click="() => (playerStore.audioMuted = !playerStore.audioMuted)" class="player-button mute-button">
+          <SpeakerMuted v-if="playerStore.audioMuted || playerStore.audioVolume === 0" />
           <Speaker v-else />
         </button>
       </Tooltip>
-      <Slider v-model="usePlayerStore().audioVolume" @change="volumeSliderChangeHandle" step=".01" :min="0" :max="1" />
+      <Slider v-model="playerStore.audioVolume" @change="volumeSliderChangeHandle" step=".01" :min="0" :max="1" />
+      <span style="flex: 0 0 4ch; text-align: right" class="slider-value">{{ Math.round(playerStore.audioVolume * 100) }}%</span>
     </div>
   </footer>
 </template>
@@ -61,6 +68,7 @@ import CirclePlay from './Icons/CirclePlay.vue';
 import CirclePause from './Icons/CirclePause.vue';
 import Speaker from './Icons/Speaker.vue';
 import SpeakerMuted from './Icons/SpeakerMuted.vue';
+import SquareArrows from './Icons/SquareArrows.vue';
 import Slider from './Controls/Slider.vue';
 import Tooltip from './Controls/Tooltip.vue';
 import { usePlayerStore } from '@/stores/player';
@@ -69,15 +77,16 @@ import { useSettingsStore } from '@/stores/settings';
 
 const emit = defineEmits(['seek', 'togglePlayPause']);
 const currentTrack = ref<ITrack>(usePlayerStore().getTrackById(usePlayerStore().currentTrackId!));
+const playerStore = usePlayerStore();
 
 onMounted(() => {
-  usePlayerStore().audioVolume = useSettingsStore().getVolume();
+  playerStore.audioVolume = useSettingsStore().getVolume();
 });
 
 watch(
-  () => usePlayerStore().currentTrackId,
+  () => playerStore.currentTrackId,
   () => {
-    currentTrack.value = usePlayerStore().getTrackById(usePlayerStore().currentTrackId!);
+    currentTrack.value = playerStore.getTrackById(playerStore.currentTrackId!);
   },
   { deep: true }
 );
@@ -97,17 +106,17 @@ footer {
   height: 96px;
   padding: 17px;
   display: flex;
-  gap: 15%;
+  gap: 10%;
   border-top: var(--b-seperator);
 }
 
 .player-left {
   display: flex;
   height: 100%;
-  width: 30%;
+  /* width: 30%; */
+  flex: 0 0 20%;
+  max-width: 20%;
   gap: 13px;
-  white-space: nowrap;
-  text-overflow: ellipsis;
 }
 
 .track-cover {
@@ -116,20 +125,29 @@ footer {
 }
 
 .track-name-artist {
-  display: inline-flex;
+  width: 100%;
+  display: flex;
   flex-direction: column;
   justify-content: center;
 }
 
 .track-name {
+  display: block;
   font-size: 15px;
   font-weight: 500;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
 }
 
 .track-artist {
+  display: block;
   font-size: 13px;
   font-weight: 400;
   color: rgb(var(--font-color-dark));
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
 }
 
 .player-middle {
@@ -161,13 +179,21 @@ footer {
   scale: 0.9;
 }
 
+.player-button.small {
+  height: 60%;
+}
+
+.loop-active {
+  fill: rgb(var(--accent));
+}
+
 .timeline {
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 13px;
 }
 
-.time {
+.slider-value {
   color: #6b7280;
   font-weight: 400;
   font-size: 13px;
@@ -175,7 +201,7 @@ footer {
 
 .player-right {
   display: flex;
-  flex: 0 0 150px;
+  flex: 0 0 200px;
   height: 100%;
   gap: 13px;
   align-items: center;

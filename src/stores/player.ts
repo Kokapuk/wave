@@ -13,6 +13,7 @@ export const usePlayerStore = defineStore('player', () => {
   const audioCurrentTime = ref(0);
   const audioVolume = ref(0.03);
   const audioMuted = ref(false);
+  const audioLoop = ref(false);
 
   function getTrackList(): ITrack[] {
     let tracks = localStorage.getItem('tracks');
@@ -100,6 +101,7 @@ export const usePlayerStore = defineStore('player', () => {
     audioCurrentTime,
     audioVolume,
     audioMuted,
+    audioLoop,
     getTrackList,
     setTrackList,
     clearTrackList,

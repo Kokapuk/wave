@@ -78,6 +78,7 @@ body,
   fill: rgb(var(--font-color));
   aspect-ratio: 1/1;
   height: 100%;
+  transition: var(--transition);
 }
 
 .empty-placeholder {
@@ -95,4 +96,11 @@ body,
   color: rgb(var(--font-color-dark));
   font-weight: 300;
   font-size: 20px;
+}
+
+.input {
+  font-size: 18px;
+  padding: 5px 10px;
+  border-radius: var(--b-radius);
+  background-color: rgb(var(--light-gray));
 }

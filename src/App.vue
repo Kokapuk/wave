@@ -26,7 +26,8 @@
       @error="audioLoadErrorHandle"
       @timeupdate="(event: Event) => playerStore.audioCurrentTime = Math.floor((event.target as HTMLAudioElement).currentTime)"
       @ended="endedHandle"
-      :src="playerStore.currentTrackId === null ? undefined : playerStore.getTrackById(playerStore.currentTrackId!).audio" />
+      :src="playerStore.currentTrackId === null ? undefined : playerStore.getTrackById(playerStore.currentTrackId!).audio"
+      :loop="playerStore.audioLoop" />
   </div>
 </template>
 

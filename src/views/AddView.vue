@@ -2,22 +2,22 @@
   <form class="add-container" @submit.prevent="submitHandle">
     <div class="param-container">
       <span class="param-title">Audio</span>
-      <input v-model="audio" type="url" class="param-input" required />
+      <input v-model="audio" type="url" class="input" required />
     </div>
 
     <div class="param-container">
       <span class="param-title">Cover</span>
-      <input v-model="cover" type="url" class="param-input" required />
+      <input v-model="cover" type="url" class="input" required />
     </div>
 
     <div class="param-container">
       <span class="param-title">Name</span>
-      <input v-model="name" type="text" class="param-input" required />
+      <input v-model="name" type="text" class="input" required />
     </div>
 
     <div class="param-container">
       <span class="param-title">Artist</span>
-      <input v-model="artist" type="text" class="param-input" required />
+      <input v-model="artist" type="text" class="input" required />
     </div>
 
     <button style="align-self: flex-end" class="button" type="submit">Add</button>
@@ -132,14 +132,8 @@ async function submitHandle() {
   font-weight: 600;
 }
 
-.param-input {
-  font-size: 18px;
-  padding: 10px 15px;
+.input {
   width: 100%;
-  border-radius: var(--b-radius);
-  background-color: rgb(var(--light-gray));
-  border: 1px solid transparent;
-  transition: var(--transition);
 }
 
 .loading-container {
