@@ -41,6 +41,7 @@ function deleteClickHandle() {
 
 <style scoped>
 .track {
+  width: 230px;
   position: relative;
   display: inline-flex;
   flex-direction: column;
@@ -50,8 +51,8 @@ function deleteClickHandle() {
 }
 
 .track-cover {
-  width: 230px;
-  height: 230px;
+  width: 100%;
+  aspect-ratio: 1/1;
   background-position: center center;
   background-repeat: no-repeat;
   background-size: cover;
@@ -96,9 +97,14 @@ function deleteClickHandle() {
 }
 
 .track-name {
+  display: block;
+  max-width: 100%;
   font-weight: 700;
   font-size: 13px;
   transition: var(--transition);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .track-name.active {
@@ -106,10 +112,15 @@ function deleteClickHandle() {
 }
 
 .track-artist {
+  display: block;
+  max-width: 100%;
   font-weight: 700;
   font-size: 13px;
   color: rgb(var(--font-color-dark));
   transition: var(--transition);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .track-artist.active {

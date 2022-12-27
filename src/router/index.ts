@@ -12,16 +12,22 @@ const router = createRouter({
       component: HomeView,
     },
     {
-      path: '/add',
-      name: 'add',
-      meta: { title: 'Add' },
-      component: () => import('../views/AddView.vue'),
-    },
-    {
       path: '/settings',
       name: 'settings',
       meta: { title: 'Settings' },
       component: () => import('../views/SettingsView.vue'),
+    },
+    {
+      path: '/add/mp3',
+      name: 'add mp3',
+      meta: { title: 'Add MP3' },
+      component: () => import('../views/AddMp3View.vue'),
+    },
+    {
+      path: '/add/spotify',
+      name: 'add spotify',
+      meta: { title: 'Add from Spotify' },
+      component: () => import('../views/AddSpotifyView.vue'),
     },
   ],
 });

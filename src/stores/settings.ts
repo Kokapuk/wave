@@ -1,4 +1,5 @@
 import { defineStore } from 'pinia';
+import type { ISpotifyToken } from '../types';
 const { app } = require('@electron/remote');
 const path = require('path');
 
@@ -36,5 +37,29 @@ export const useSettingsStore = defineStore('settings', () => {
     return storageMaximized === null ? false : JSON.parse(storageMaximized);
   }
 
-  return { defaultMusicStoragePath, setMusicStoragePath, getMusicStoragePath, setVolume, getVolume, setMaximized, getMaximized };
+  function setSpotifyToken(token: ISpotifyToken) {
+    localStorage.setItem('settings:spotify-token', JSON.stringify(token));
+  }
+
+  function getSpotifyToken(): ISpotifyToken | null {
+    let storageToken = localStorage.getItem('settings:spotify-token');
+    if (storageToken === null) return null;
+
+    let parsedToken: ISpotifyToken = JSON.parse(storageToken);
+    if (Date.now() > parsedToken.expires) return null;
+
+    return parsedToken;
+  }
+
+  return {
+    defaultMusicStoragePath,
+    setMusicStoragePath,
+    getMusicStoragePath,
+    setVolume,
+    getVolume,
+    setMaximized,
+    getMaximized,
+    setSpotifyToken,
+    getSpotifyToken,
+  };
 });

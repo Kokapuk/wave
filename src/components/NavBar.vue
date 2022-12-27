@@ -6,8 +6,9 @@
     </div>
     <div class="links">
       <RouterLink class="nav-link" to="/"><Squares class="nav-link-icon" /> Your Library</RouterLink>
-      <RouterLink class="nav-link" to="/add"><Plus class="nav-link-icon" /> Add</RouterLink>
       <RouterLink class="nav-link" to="/settings"><Gear class="nav-link-icon" /> Settings</RouterLink>
+      <RouterLink class="nav-link" to="/add/mp3"><Plus class="nav-link-icon" /> Add MP3</RouterLink>
+      <RouterLink class="nav-link" to="/add/spotify"><Spotify class="nav-link-icon" /> Add from Spotify</RouterLink>
     </div>
   </div>
 </template>
@@ -17,6 +18,7 @@ import Logo from './Icons/Logo.vue';
 import Plus from './Icons/Plus.vue';
 import Gear from './Icons/Gear.vue';
 import Squares from './Icons/Squares.vue';
+import Spotify from './Icons/Spotify.vue';
 </script>
 
 <style scoped>

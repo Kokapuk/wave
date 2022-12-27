@@ -2,8 +2,10 @@ import { ref } from 'vue';
 import { defineStore } from 'pinia';
 import type { ITrack } from '@/types';
 import { useSettingsStore } from './settings';
+import { uid } from 'uid';
 const fs = require('fs');
 const path = require('path');
+const Downloader = require('nodejs-file-downloader');
 
 export const usePlayerStore = defineStore('player', () => {
   const title = ref('');
@@ -93,6 +95,56 @@ export const usePlayerStore = defineStore('player', () => {
     usePlayerStore().setTrackList(tracks);
   }
 
+  async function downloadTrack(track: ITrack, progressChange: (percentage: number) => void) {
+    const trackId = uid(12);
+    const trackPath = path.join(useSettingsStore().getMusicStoragePath(), trackId);
+    let downloadSuccesfull = true;
+
+    let downloader = new Downloader({
+      url: track.audio,
+      directory: trackPath,
+      onProgress: progressChange,
+    });
+
+    try {
+      const { filePath } = await downloader.download();
+
+      fs.copyFileSync(filePath, path.join(trackPath, 'audio.mp3'));
+      fs.unlinkSync(filePath);
+    } catch (error) {
+      console.log('Audio download failed', error);
+      downloadSuccesfull = false;
+    }
+
+    downloader = new Downloader({
+      url: track.cover,
+      directory: trackPath,
+      onProgress: progressChange,
+    });
+
+    try {
+      const { filePath } = await downloader.download();
+
+      fs.copyFileSync(filePath, path.join(trackPath, 'cover.png'));
+      fs.unlinkSync(filePath);
+    } catch (error) {
+      console.log('Cover download failed', error);
+      downloadSuccesfull = false;
+    }
+
+    if (downloadSuccesfull) {
+      const downloadedTrack: ITrack = {
+        id: trackId,
+        audio: path.join(trackPath, 'audio.mp3'),
+        cover: path.join(trackPath, 'cover.png'),
+        name: track.name,
+        artist: track.artist,
+      };
+
+      usePlayerStore().setTrackList([downloadedTrack, ...usePlayerStore().getTrackList()]);
+    }
+  }
+
   return {
     title,
     currentTrackId,
@@ -110,5 +162,6 @@ export const usePlayerStore = defineStore('player', () => {
     getPreviousTrack,
     getNextTrack,
     importTracks,
+    downloadTrack,
   };
 });

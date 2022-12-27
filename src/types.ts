@@ -12,3 +12,8 @@ export interface ITrack {
   name: string;
   artist: string;
 }
+
+export interface ISpotifyToken {
+  token: string;
+  expires: number;
+}

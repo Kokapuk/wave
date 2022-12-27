@@ -30,14 +30,8 @@
 
 <script lang="ts" setup>
 import { ref } from 'vue';
-import { uid } from 'uid';
 import ProgressBar from '../components/Controls/ProgressBar.vue';
 import { usePlayerStore } from '../stores/player';
-import type { ITrack } from '@/types';
-import { useSettingsStore } from '@/stores/settings';
-const Downloader = require('nodejs-file-downloader');
-const path = require('path');
-const fs = require('fs');
 
 const audio = ref<string>('');
 const cover = ref<string>('');
@@ -45,63 +39,17 @@ const name = ref<string>('');
 const artist = ref<string>('');
 const loading = ref(false);
 const progress = ref(0);
+const playerStore = usePlayerStore();
 
 async function submitHandle() {
-  const trackId = uid(12);
-  const trackPath = path.join(useSettingsStore().getMusicStoragePath(), trackId);
-  let downloadSuccesfull = true;
-
   loading.value = true;
 
-  let downloader = new Downloader({
-    url: audio.value,
-    directory: trackPath,
-    onProgress: (percentage: number) => {
+  await playerStore.downloadTrack(
+    { id: '', audio: audio.value, cover: cover.value, name: name.value, artist: artist.value },
+    (percentage: number) => {
       progress.value = percentage;
-    },
-  });
-
-  try {
-    const { filePath } = await downloader.download();
-
-    fs.copyFileSync(filePath, path.join(trackPath, 'audio.mp3'));
-    fs.unlinkSync(filePath);
-  } catch (error) {
-    console.log('Audio download failed', error);
-    downloadSuccesfull = false;
-    loading.value = false;
-  }
-
-  downloader = new Downloader({
-    url: cover.value,
-    directory: trackPath,
-    onProgress: (percentage: number) => {
-      progress.value = percentage;
-    },
-  });
-
-  try {
-    const { filePath } = await downloader.download();
-
-    fs.copyFileSync(filePath, path.join(trackPath, 'cover.png'));
-    fs.unlinkSync(filePath);
-  } catch (error) {
-    console.log('Cover download failed', error);
-    downloadSuccesfull = false;
-    loading.value = false;
-  }
-
-  if (downloadSuccesfull) {
-    const track: ITrack = {
-      id: trackId,
-      audio: path.join(trackPath, 'audio.mp3'),
-      cover: path.join(trackPath, 'cover.png'),
-      name: name.value,
-      artist: artist.value,
-    };
-
-    usePlayerStore().setTrackList([track, ...usePlayerStore().getTrackList()]);
-  }
+    }
+  );
 
   audio.value = '';
   cover.value = '';

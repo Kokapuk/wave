@@ -9,8 +9,8 @@ const gotTheLock = app.requestSingleInstanceLock();
 
 function createWindow() {
   mainWindow = new BrowserWindow({
-    width: 1000,
-    height: 600,
+    width: 1200,
+    height: 700,
     titleBarStyle: 'hidden',
     titleBarOverlay: {
       symbolColor: '#20b2aa',
