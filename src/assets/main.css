@@ -25,6 +25,7 @@
   -webkit-box-sizing: border-box;
   color: rgb(var(--font-color));
   font-family: 'Inter', sans-serif;
+  user-select: inherit;
 }
 
 ::-webkit-scrollbar {
@@ -42,6 +43,7 @@ body,
 #app {
   color-scheme: dark;
   height: 100vh;
+  user-select: none;
 }
 
 .button {

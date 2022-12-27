@@ -46,6 +46,7 @@ function deleteClickHandle() {
   flex-direction: column;
   gap: 5px;
   overflow: hidden;
+  user-select: text;
 }
 
 .track-cover {

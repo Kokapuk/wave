@@ -16,10 +16,7 @@
         </Tooltip>
 
         <Tooltip text="Previous track" :positioning="TooltipPositioning.top">
-          <button
-            @click="() => playerStore.currentTrackId = playerStore.getPreviousTrack(playerStore.currentTrackId!).id"
-            style="rotate: 180deg"
-            class="player-button small">
+          <button @click="playPreviousTrackClickHandle" style="rotate: 180deg" class="player-button small">
             <Chevron />
           </button>
         </Tooltip>
@@ -98,6 +95,15 @@ function secondsToTimestamp(seconds: number): string {
 function volumeSliderChangeHandle(event: Event) {
   useSettingsStore().setVolume((event.target as HTMLInputElement).valueAsNumber);
 }
+
+function playPreviousTrackClickHandle() {
+  if (playerStore.audioCurrentTime < 5) {
+    playerStore.currentTrackId = playerStore.getPreviousTrack(playerStore.currentTrackId!).id;
+    return;
+  }
+
+  emit('seek', 0);
+}
 </script>
 
 <style scoped>
@@ -129,6 +135,7 @@ footer {
   display: flex;
   flex-direction: column;
   justify-content: center;
+  user-select: text;
 }
 
 .track-name {
