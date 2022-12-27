@@ -115,6 +115,7 @@ async function submitHandle() {
 
 async function addClickHandle(trackDownloadForm: ITrack, id: string) {
   loading.value = true;
+  playerStore.isNavBarDisabled = true;
 
   const apiResponse = await axios.get(`https://api.spotifydown.com/download/${id}`, {
     headers: { 'Content-Type': 'application/json' },
@@ -127,6 +128,7 @@ async function addClickHandle(trackDownloadForm: ITrack, id: string) {
   tracksByQuery.value = [];
   searchQuery.value = '';
   loading.value = false;
+  playerStore.isNavBarDisabled = false;
 }
 </script>
 

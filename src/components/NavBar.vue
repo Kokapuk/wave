@@ -5,10 +5,18 @@
       <span class="logo-text">Wave</span>
     </div>
     <div class="links">
-      <RouterLink class="nav-link" to="/"><Squares class="nav-link-icon" /> Your Library</RouterLink>
-      <RouterLink class="nav-link" to="/settings"><Gear class="nav-link-icon" /> Settings</RouterLink>
-      <RouterLink class="nav-link" to="/add/mp3"><Plus class="nav-link-icon" /> Add MP3</RouterLink>
-      <RouterLink class="nav-link" to="/add/spotify"><Spotify class="nav-link-icon" /> Add from Spotify</RouterLink>
+      <RouterLink :class="['nav-link', playerStore.isNavBarDisabled && 'disabled']" to="/">
+        <Squares class="nav-link-icon" /> Your Library
+      </RouterLink>
+      <RouterLink :class="['nav-link', playerStore.isNavBarDisabled && 'disabled']" to="/settings">
+        <Gear class="nav-link-icon" /> Settings
+      </RouterLink>
+      <RouterLink :class="['nav-link', playerStore.isNavBarDisabled && 'disabled']" to="/add/mp3">
+        <Plus class="nav-link-icon" /> Add MP3
+      </RouterLink>
+      <RouterLink :class="['nav-link', playerStore.isNavBarDisabled && 'disabled']" to="/add/spotify">
+        <Spotify class="nav-link-icon" /> Add from Spotify
+      </RouterLink>
     </div>
   </div>
 </template>
@@ -19,6 +27,9 @@ import Plus from './Icons/Plus.vue';
 import Gear from './Icons/Gear.vue';
 import Squares from './Icons/Squares.vue';
 import Spotify from './Icons/Spotify.vue';
+import { usePlayerStore } from '@/stores/player';
+
+const playerStore = usePlayerStore();
 </script>
 
 <style scoped>
@@ -77,6 +88,11 @@ import Spotify from './Icons/Spotify.vue';
 
 .nav-link.router-link-active {
   background-color: #39393b;
+}
+
+.nav-link.disabled {
+  opacity: 0.5;
+  pointer-events: none;
 }
 
 .nav-link-icon {
