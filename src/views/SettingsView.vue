@@ -56,7 +56,7 @@ function chooseClickHandle() {
 .param-title {
   color: rgb(var(--font-color-dark));
   font-size: 18px;
-  width: 250px;
+  flex: 0 0 200px;
   font-weight: 600;
 }
 

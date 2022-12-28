@@ -52,7 +52,7 @@ const playerStore = usePlayerStore();
 }
 
 .logo {
-  fill: rgb(var(--accent));
+  stroke: rgb(var(--accent));
   height: 44px;
 }
 

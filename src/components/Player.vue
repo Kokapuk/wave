@@ -52,7 +52,13 @@
           <Speaker v-else />
         </button>
       </Tooltip>
-      <Slider v-model="playerStore.audioVolume" @change="volumeSliderChangeHandle" step=".01" :min="0" :max="1" />
+      <Slider
+        class="volume-slider"
+        v-model="playerStore.audioVolume"
+        @change="volumeSliderChangeHandle"
+        step=".01"
+        :min="0"
+        :max="1" />
       <span style="flex: 0 0 4ch; text-align: right" class="slider-value">{{ Math.round(playerStore.audioVolume * 100) }}%</span>
     </div>
   </footer>
@@ -119,19 +125,18 @@ footer {
 .player-left {
   display: flex;
   height: 100%;
-  /* width: 30%; */
   flex: 0 0 20%;
   max-width: 20%;
   gap: 13px;
 }
 
 .track-cover {
-  aspect-ratio: 1/1;
   height: 100%;
+  aspect-ratio: 1/1;
 }
 
 .track-name-artist {
-  width: 100%;
+  width: calc(100% - 61px);
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -200,17 +205,11 @@ footer {
   gap: 13px;
 }
 
-.slider-value {
-  color: #6b7280;
-  font-weight: 400;
-  font-size: 13px;
-}
-
 .player-right {
   display: flex;
-  flex: 0 0 200px;
+  flex: 0 0 20%;
   height: 100%;
-  gap: 13px;
+  gap: 10px;
   align-items: center;
   justify-content: right;
 }
@@ -219,5 +218,16 @@ footer {
   width: 35px;
   height: 35px;
   padding: 9px;
+}
+
+.volume-slider {
+  width: 125px;
+}
+
+.slider-value {
+  color: #6b7280;
+  font-weight: 400;
+  font-size: 13px;
+  flex: 0 0 5ch;
 }
 </style>

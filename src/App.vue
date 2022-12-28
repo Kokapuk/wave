@@ -116,7 +116,7 @@ watch(
 watch(
   () => playerStore.audioVolume,
   (newValue) => {
-    audioElement.value!.volume = newValue;
+    audioElement.value!.volume = newValue * 0.25;
   },
   { deep: true }
 );
@@ -139,7 +139,6 @@ function audioLoadStartHandle() {
 }
 
 function audioLoadHandle() {
-  audioElement.value!.volume = playerStore.audioVolume;
   playerStore.audioCurrentTime = 0;
 
   audioElement.value!.play();
