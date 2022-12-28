@@ -41,7 +41,6 @@ export const usePlayerStore = defineStore('player', () => {
 
   function deleteTrack(id: string) {
     setTrackList(getTrackList().filter((item) => item.id !== id));
-
     fs.rmSync(path.join(useSettingsStore().getMusicStoragePath(), id), { recursive: true, force: true });
   }
 

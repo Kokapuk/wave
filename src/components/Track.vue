@@ -31,11 +31,8 @@ const props = defineProps<IProps>();
 
 function deleteClickHandle() {
   usePlayerStore().currentTrackId = null;
-
-  setTimeout(() => {
-    usePlayerStore().deleteTrack(props.track.id);
-    router.go(0);
-  }, 100);
+  usePlayerStore().deleteTrack(props.track.id);
+  router.go(0);
 }
 </script>
 

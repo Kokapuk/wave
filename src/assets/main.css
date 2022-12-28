@@ -91,6 +91,8 @@ body,
 
 .empty-placeholder-center {
   display: flex;
+  flex-direction: column;
+  gap: 25px;
   height: 100%;
   width: 100%;
   justify-content: center;
@@ -105,4 +107,12 @@ body,
   padding: 5px 10px;
   border-radius: var(--b-radius);
   background-color: rgb(var(--light-gray));
+}
+
+.center {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }

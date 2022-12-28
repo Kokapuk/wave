@@ -10,7 +10,7 @@
         minlength="3" />
       <button type="submit" class="search-button button">Search</button>
     </form>
-    <div v-if="!loading" class="track-list">
+    <div v-if="!downloading && !loading" class="track-list">
       <div v-for="track in tracksByQuery" class="spotify-track">
         <iframe
           class="spotify-frame"
@@ -32,7 +32,8 @@
         </button>
       </div>
     </div>
-    <span v-else class="empty-placeholder-center">Downloading...</span>
+    <div v-else-if="loading" class="center"><LoadingIndicator /></div>
+    <span v-else class="empty-placeholder-center"><ProgressBar :progress="progress" /> Downloading...</span>
   </div>
 </template>
 
@@ -42,11 +43,15 @@ import axios from 'axios';
 import type { ITrack } from '@/types';
 import { usePlayerStore } from '@/stores/player';
 import { useSettingsStore } from '@/stores/settings';
+import LoadingIndicator from '@/components/Controls/LoadingIndicator.vue';
+import ProgressBar from '@/components/Controls/ProgressBar.vue';
+import router from '@/router';
 
 const playerStore = usePlayerStore();
 const settingsStore = useSettingsStore();
 const searchQuery = ref('');
 const tracksByQuery = ref<any[]>([]);
+const downloading = ref(false);
 const loading = ref(false);
 const progress = ref(0);
 
@@ -71,6 +76,7 @@ function parseArtists(artists: any[]) {
 }
 
 async function submitHandle() {
+  loading.value = true;
   let token;
 
   if (settingsStore.getSpotifyToken() === null) {
@@ -111,10 +117,11 @@ async function submitHandle() {
 
   const tracks = response.data.tracks.items as any[];
   tracksByQuery.value = tracks;
+  loading.value = false;
 }
 
 async function addClickHandle(trackDownloadForm: ITrack, id: string) {
-  loading.value = true;
+  downloading.value = true;
   playerStore.isNavBarDisabled = true;
 
   const apiResponse = await axios.get(`https://api.spotifydown.com/download/${id}`, {
@@ -123,12 +130,13 @@ async function addClickHandle(trackDownloadForm: ITrack, id: string) {
 
   trackDownloadForm.audio = apiResponse.data.link;
 
-  playerStore.downloadTrack(trackDownloadForm, (percentage) => (progress.value = percentage));
+  await playerStore.downloadTrack(trackDownloadForm, (percentage) => (progress.value = percentage));
 
   tracksByQuery.value = [];
   searchQuery.value = '';
-  loading.value = false;
+  downloading.value = false;
   playerStore.isNavBarDisabled = false;
+  router.push('/');
 }
 </script>
 

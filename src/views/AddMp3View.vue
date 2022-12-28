@@ -29,6 +29,7 @@
 </template>
 
 <script lang="ts" setup>
+import router from '@/router';
 import { ref } from 'vue';
 import ProgressBar from '../components/Controls/ProgressBar.vue';
 import { usePlayerStore } from '../stores/player';
@@ -43,6 +44,7 @@ const playerStore = usePlayerStore();
 
 async function submitHandle() {
   loading.value = true;
+  playerStore.isNavBarDisabled = true;
 
   await playerStore.downloadTrack(
     { id: '', audio: audio.value, cover: cover.value, name: name.value, artist: artist.value },
@@ -57,6 +59,9 @@ async function submitHandle() {
   artist.value = '';
 
   loading.value = false;
+  playerStore.isNavBarDisabled = false;
+
+  router.push('/');
 }
 </script>
 

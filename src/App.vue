@@ -1,5 +1,5 @@
 <template>
-  <div v-if="!windowMaximized" class="window-border"></div>
+  <div v-show="!windowMaximized" class="window-border"></div>
   <div class="wrapper">
     <main>
       <NavigationBar />
@@ -26,7 +26,7 @@
       @error="audioLoadErrorHandle"
       @timeupdate="(event: Event) => playerStore.audioCurrentTime = Math.floor((event.target as HTMLAudioElement).currentTime)"
       @ended="endedHandle"
-      :src="playerStore.currentTrackId === null ? undefined : playerStore.getTrackById(playerStore.currentTrackId!).audio"
+      :src="playerStore.currentTrackId === null ? undefined : audioBlob"
       :loop="playerStore.audioLoop || playerStore.getTrackList().length === 1" />
   </div>
 </template>
@@ -36,7 +36,7 @@ import { RouterLink, RouterView } from 'vue-router';
 import { usePlayerStore } from './stores/player';
 import Player from './components/Player.vue';
 import NavigationBar from './components/NavBar.vue';
-import { onMounted, ref, watch } from 'vue';
+import { computed, onMounted, ref, watch } from 'vue';
 import { useSettingsStore } from './stores/settings';
 import router from './router';
 const path = require('path');
@@ -46,6 +46,7 @@ const { getCurrentWindow, globalShortcut } = require('@electron/remote');
 const audioElement = ref<HTMLAudioElement | null>(null);
 const windowMaximized = ref(false);
 const playerStore = usePlayerStore();
+const audioBlob = computed(() => generateBlob(playerStore.getTrackById(playerStore.currentTrackId!).audio));
 
 onMounted(() => {
   if (!fs.existsSync(useSettingsStore().defaultMusicStoragePath)) {
@@ -103,13 +104,10 @@ watch(
     if (newValue !== null) {
       const track = playerStore.getTrackById(newValue);
 
-      let buffer = fs.readFileSync(track.cover);
-      let blob = new Blob([buffer]);
-
       navigator.mediaSession.metadata = new MediaMetadata({
         title: track.name,
         artist: track.artist,
-        artwork: [{ src: URL.createObjectURL(blob), sizes: '192x192', type: 'image/png' }],
+        artwork: [{ src: generateBlob(track.cover), sizes: '192x192', type: 'image/png' }],
       });
     }
   }
@@ -153,6 +151,13 @@ function audioLoadErrorHandle() {
 
 function endedHandle() {
   playerStore.currentTrackId = playerStore.getNextTrack(playerStore.currentTrackId!).id;
+}
+
+function generateBlob(filePath: string): string {
+  let buffer = fs.readFileSync(filePath);
+  let blob = new Blob([buffer]);
+
+  return URL.createObjectURL(blob);
 }
 </script>
 
