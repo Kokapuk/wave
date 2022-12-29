@@ -21,7 +21,7 @@
           </button>
         </Tooltip>
 
-        <button @click="() => emit('togglePlayPause')" class="player-button">
+        <button @click="() => (playerStore.audioIsPaused = !playerStore.audioIsPaused)" class="player-button">
           <CirclePlay v-if="playerStore.audioIsPaused" />
           <CirclePause v-else />
         </button>
@@ -78,7 +78,7 @@ import { usePlayerStore } from '@/stores/player';
 import { onMounted, ref, watch } from 'vue';
 import { useSettingsStore } from '@/stores/settings';
 
-const emit = defineEmits(['seek', 'togglePlayPause']);
+const emit = defineEmits(['seek']);
 const currentTrack = ref<ITrack>(usePlayerStore().getTrackById(usePlayerStore().currentTrackId!));
 const playerStore = usePlayerStore();
 

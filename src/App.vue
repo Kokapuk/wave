@@ -11,15 +11,10 @@
       </div>
     </main>
     <Transition name="player-fade">
-      <Player
-        v-if="playerStore.currentTrackId !== null"
-        @seek="seekHandle"
-        @toggle-play-pause="() => playerStore.audioIsPaused ? audioElement!.play() : audioElement!.pause()" />
+      <Player v-if="playerStore.currentTrackId !== null" @seek="seekHandle" />
     </Transition>
     <audio
       ref="audioElement"
-      @pause="() => (playerStore.audioIsPaused = true)"
-      @play="() => (playerStore.audioIsPaused = false)"
       @durationchange="(event: Event) => playerStore.audioDuration = (event.target as HTMLAudioElement).duration"
       @loadstart="audioLoadStartHandle"
       @loadedmetadata="audioLoadHandle"
@@ -129,19 +124,25 @@ watch(
   { deep: true }
 );
 
+watch(
+  () => playerStore.audioIsPaused,
+  (newValue) => {
+    newValue ? audioElement.value!.pause() : audioElement.value!.play();
+  },
+  { deep: true }
+);
+
 function seekHandle(time: number) {
   audioElement.value!.currentTime = time;
 }
 
 function audioLoadStartHandle() {
-  audioElement.value!.pause();
+  playerStore.audioIsPaused = true;
   audioElement.value!.currentTime = 0;
 }
 
 function audioLoadHandle() {
-  playerStore.audioCurrentTime = 0;
-
-  audioElement.value!.play();
+  playerStore.audioIsPaused = false;
 }
 
 function audioLoadErrorHandle() {

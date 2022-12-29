@@ -11,7 +11,6 @@
 <script setup lang="ts">
 import { usePlayerStore } from '@/stores/player';
 import { useSettingsStore } from '@/stores/settings';
-import type { ITrack } from '@/types';
 import { ref } from 'vue';
 const { dialog, getCurrentWindow } = require('@electron/remote');
 const fs = require('fs');

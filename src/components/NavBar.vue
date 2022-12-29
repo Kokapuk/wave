@@ -18,6 +18,7 @@
         <Spotify class="nav-link-icon" /> Add from Spotify
       </RouterLink>
     </div>
+    <div class="app-version">{{ appVersion }}</div>
   </div>
 </template>
 
@@ -28,12 +29,17 @@ import Gear from './Icons/Gear.vue';
 import Squares from './Icons/Squares.vue';
 import Spotify from './Icons/Spotify.vue';
 import { usePlayerStore } from '@/stores/player';
+import { computed } from 'vue';
 
 const playerStore = usePlayerStore();
+const { app } = require('@electron/remote');
+
+const appVersion = computed(() => app.getVersion());
 </script>
 
 <style scoped>
 .navigation-bar {
+  position: relative;
   display: flex;
   height: 100%;
   width: 275px;
@@ -98,5 +104,12 @@ const playerStore = usePlayerStore();
 .nav-link-icon {
   height: 18px;
   fill: rgb(var(--accent));
+}
+
+.app-version {
+  position: absolute;
+  color: rgb(var(--font-color-dark));
+  left: 21px;
+  bottom: 21px;
 }
 </style>

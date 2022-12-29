@@ -2,9 +2,9 @@
   <div class="view-container">
     <form class="search-container" @submit.prevent="submitHandle">
       <input
-        v-model="searchQuery"
+        v-model.trim="searchQuery"
         class="search-input input"
-        placeholder="Input search query"
+        placeholder="Input search query or track link"
         type="search"
         required
         minlength="3" />
@@ -102,21 +102,37 @@ async function submitHandle() {
     token = settingsStore.getSpotifyToken()!.token;
   }
 
-  const response = await axios.get('https://api.spotify.com/v1/search', {
-    params: {
-      q: searchQuery.value.replaceAll(' ', '%20'),
-      type: 'track',
-      limit: 10,
-    },
-    headers: {
-      Accept: 'application/json',
-      'Content-Type': 'application/json',
-      Authorization: 'Bearer ' + token,
-    },
-  });
+  if (searchQuery.value.startsWith('https://open.spotify.com/track/')) {
+    let trackId = searchQuery.value.replace('https://open.spotify.com/track/', '');
+    trackId = trackId.split('?si=')[0];
 
-  const tracks = response.data.tracks.items as any[];
-  tracksByQuery.value = tracks;
+    const response = await axios.get(`https://api.spotify.com/v1/tracks/${trackId}`, {
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        Authorization: 'Bearer ' + token,
+      },
+    });
+
+    tracksByQuery.value = [response.data];
+  } else {
+    const response = await axios.get('https://api.spotify.com/v1/search', {
+      params: {
+        q: searchQuery.value.replaceAll(' ', '%20'),
+        type: 'track',
+        limit: 10,
+      },
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        Authorization: 'Bearer ' + token,
+      },
+    });
+
+    const tracks = response.data.tracks.items as any[];
+    tracksByQuery.value = tracks;
+  }
+
   loading.value = false;
 }
 
@@ -137,6 +153,10 @@ async function addClickHandle(trackDownloadForm: ITrack, id: string) {
   downloading.value = false;
   playerStore.isNavBarDisabled = false;
   router.push('/');
+}
+
+function testHandle() {
+  console.log('focus in');
 }
 </script>
 
