@@ -1,12 +1,19 @@
 <template>
   <div class="track">
     <button
-      @click="() => (usePlayerStore().currentTrackId = track.id)"
+      @click="playPauseHandle"
       class="track-cover"
       :style="{ backgroundImage: `url('file://${props.track.cover.replaceAll('\\', '/')}')` }">
-      <CirclePlay class="play-icon" />
+      <div class="play-pause-icon-container">
+        <Transition name="play-pause" mode="out-in">
+          <CirclePause
+            v-if="playerStore.currentTrackId === props.track.id && !playerStore.audioIsPaused"
+            class="play-pause-icon" />
+          <CirclePlay v-else class="play-pause-icon" />
+        </Transition>
+      </div>
     </button>
-    <button @click="deleteClickHandle" class="button-remove">
+    <button @click="() => emit('deleteRequest', props.track)" class="button-delete">
       <Close />
     </button>
     <span :class="['track-name', { active: props.track.id === usePlayerStore().currentTrackId }]">{{ props.track.name }}</span>
@@ -18,9 +25,9 @@
 
 <script setup lang="ts">
 import CirclePlay from './Icons/CirclePlay.vue';
+import CirclePause from './Icons/CirclePause.vue';
 import Close from './Icons/Close.vue';
 import { usePlayerStore } from '../stores/player';
-import router from '@/router';
 import type { ITrack } from '@/types';
 
 interface IProps {
@@ -28,11 +35,15 @@ interface IProps {
 }
 
 const props = defineProps<IProps>();
+const emit = defineEmits(['deleteRequest']);
+const playerStore = usePlayerStore();
 
-function deleteClickHandle() {
-  usePlayerStore().currentTrackId = null;
-  usePlayerStore().deleteTrack(props.track.id);
-  router.go(0);
+function playPauseHandle() {
+  if (playerStore.currentTrackId !== props.track.id) {
+    playerStore.currentTrackId = props.track.id;
+  } else {
+    playerStore.audioIsPaused = !playerStore.audioIsPaused;
+  }
 }
 </script>
 
@@ -59,23 +70,44 @@ function deleteClickHandle() {
   overflow: hidden;
 }
 
-.play-icon {
-  padding: 40%;
+.play-pause-icon-container {
+  pointer-events: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   opacity: 0;
+  height: 100%;
+  background-color: rgb(0, 0, 0, 0.3);
   transition: var(--transition);
-  background-color: rgb(0, 0, 0, 0.2);
 }
 
-.track-cover:hover .play-icon {
-  scale: 1.2;
+.track-cover:hover .play-pause-icon-container {
   opacity: 1;
 }
 
-.track-cover:active .play-icon {
-  background-color: rgb(0, 0, 0, 0.4);
+.track-cover:active .play-pause-icon-container {
+  background-color: rgb(0, 0, 0, 0.6);
 }
 
-.button-remove {
+.play-pause-icon {
+  height: 20%;
+}
+
+.track-cover:hover .play-pause-icon {
+  scale: 1.2;
+}
+
+.play-pause-enter-active,
+.play-pause-leave-active {
+  transition: var(--transition-half);
+}
+
+.play-pause-enter-from,
+.play-pause-leave-to {
+  scale: 1 !important;
+}
+
+.button-delete {
   position: absolute;
   height: 12.5%;
   width: 12.5%;
@@ -87,7 +119,7 @@ function deleteClickHandle() {
   transition: var(--transition);
 }
 
-.track:hover .button-remove {
+.track:hover .button-delete {
   right: 2%;
   top: 0;
   opacity: 1;

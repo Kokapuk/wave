@@ -2,7 +2,7 @@
   "name": "wave",
   "description": "Wave",
   "author": "Kokapuk",
-  "version": "1.0.0",
+  "version": "1.2.0",
   "private": true,
   "main": "./main.js",
   "repository": {

@@ -20,7 +20,7 @@
       @loadedmetadata="audioLoadHandle"
       @error="audioLoadErrorHandle"
       @timeupdate="(event: Event) => playerStore.audioCurrentTime = Math.floor((event.target as HTMLAudioElement).currentTime)"
-      @ended="endedHandle"
+      @ended="audioEndedHandle"
       :src="playerStore.currentTrackId === null ? undefined : audioBlob"
       :loop="playerStore.audioLoop || playerStore.getTrackList().length === 1" />
   </div>
@@ -72,8 +72,14 @@ onMounted(() => {
   navigator.mediaSession.setActionHandler('previoustrack', () => {
     playerStore.currentTrackId = playerStore.getPreviousTrack(playerStore.currentTrackId!).id;
   });
-  navigator.mediaSession.setActionHandler('nexttrack', function () {
+  navigator.mediaSession.setActionHandler('nexttrack', () => {
     playerStore.currentTrackId = playerStore.getNextTrack(playerStore.currentTrackId!).id;
+  });
+  navigator.mediaSession.setActionHandler('play', () => {
+    playerStore.audioIsPaused = false;
+  });
+  navigator.mediaSession.setActionHandler('pause', () => {
+    playerStore.audioIsPaused = true;
   });
 
   globalShortcut.register('numadd', () => {
@@ -149,8 +155,20 @@ function audioLoadErrorHandle() {
   playerStore.currentTrackId = null;
 }
 
-function endedHandle() {
-  playerStore.currentTrackId = playerStore.getNextTrack(playerStore.currentTrackId!).id;
+function audioEndedHandle() {
+  if (playerStore.audioShuffle) {
+    while (true) {
+      const nextTrackListId = Math.floor(Math.random() * playerStore.getTrackList().length);
+      const nextTrackId = playerStore.getTrackList()[nextTrackListId].id;
+
+      if (playerStore.currentTrackId !== nextTrackId) {
+        playerStore.currentTrackId = nextTrackId;
+        break;
+      }
+    }
+  } else {
+    playerStore.currentTrackId = playerStore.getNextTrack(playerStore.currentTrackId!).id;
+  }
 }
 
 function generateBlob(filePath: string): string {

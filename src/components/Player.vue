@@ -8,16 +8,16 @@
       </div>
     </div>
     <div class="player-middle">
-      <div class="button-container">
-        <Tooltip :text="playerStore.audioLoop ? 'Don\'t loop track' : 'Loop track'" :positioning="TooltipPositioning.top">
+      <div class="media-buttons-container">
+        <Tooltip text="Loop" :positioning="TooltipPositioning.top">
           <button @click="() => (playerStore.audioLoop = !playerStore.audioLoop)" class="player-button small">
-            <SquareArrows :class="{ 'loop-active': playerStore.audioLoop }" />
+            <SquareArrows :class="{ 'icon-active': playerStore.audioLoop }" />
           </button>
         </Tooltip>
 
         <Tooltip text="Previous track" :positioning="TooltipPositioning.top">
-          <button @click="playPreviousTrackClickHandle" style="rotate: 180deg" class="player-button small">
-            <Chevron />
+          <button @click="playPreviousTrackClickHandle" class="player-button small">
+            <Backward />
           </button>
         </Tooltip>
 
@@ -30,7 +30,13 @@
           <button
             @click="() => playerStore.currentTrackId = playerStore.getNextTrack(playerStore.currentTrackId!).id"
             class="player-button small">
-            <Chevron />
+            <Forward />
+          </button>
+        </Tooltip>
+
+        <Tooltip text="Shuffle" :positioning="TooltipPositioning.top">
+          <button @click="() => (playerStore.audioShuffle = !playerStore.audioShuffle)" class="player-button small">
+            <Shuffle :class="{ 'icon-active': playerStore.audioShuffle }" />
           </button>
         </Tooltip>
       </div>
@@ -52,13 +58,15 @@
           <Speaker v-else />
         </button>
       </Tooltip>
-      <Slider
-        class="volume-slider"
-        v-model="playerStore.audioVolume"
-        @change="volumeSliderChangeHandle"
-        step=".01"
-        :min="0"
-        :max="1" />
+      <Tooltip text="Num+/Num-" :positioning="TooltipPositioning.top">
+        <Slider
+          class="volume-slider"
+          v-model="playerStore.audioVolume"
+          @change="volumeSliderChangeHandle"
+          step=".01"
+          :min="0"
+          :max="1" />
+      </Tooltip>
       <span style="flex: 0 0 4ch; text-align: right" class="slider-value">{{ Math.round(playerStore.audioVolume * 100) }}%</span>
     </div>
   </footer>
@@ -66,12 +74,14 @@
 
 <script setup lang="ts">
 import { TooltipPositioning, type ITrack } from '@/types';
-import Chevron from './Icons/Chevron.vue';
+import Backward from './Icons/Backward.vue';
+import Forward from './Icons/Forward.vue';
 import CirclePlay from './Icons/CirclePlay.vue';
 import CirclePause from './Icons/CirclePause.vue';
 import Speaker from './Icons/Speaker.vue';
 import SpeakerMuted from './Icons/SpeakerMuted.vue';
 import SquareArrows from './Icons/SquareArrows.vue';
+import Shuffle from './Icons/Shuffle.vue';
 import Slider from './Controls/Slider.vue';
 import Tooltip from './Controls/Tooltip.vue';
 import { usePlayerStore } from '@/stores/player';
@@ -169,10 +179,10 @@ footer {
   gap: 9px;
 }
 
-.button-container {
+.media-buttons-container {
   display: flex;
   height: 35px;
-  gap: 9px;
+  gap: 15px;
   justify-content: center;
 }
 
@@ -195,7 +205,7 @@ footer {
   height: 60%;
 }
 
-.loop-active {
+.icon-active {
   fill: rgb(var(--accent));
 }
 
