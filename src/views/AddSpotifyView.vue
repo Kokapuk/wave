@@ -140,8 +140,11 @@ async function addClickHandle(trackDownloadForm: ITrack, id: string) {
   downloading.value = true;
   playerStore.isNavBarDisabled = true;
 
-  const apiResponse = await axios.get(`https://api.spotifydown.com/download/${id}`, {
-    headers: { 'Content-Type': 'application/json' },
+  const apiResponse = await axios.get(`https://spotify-downloader1.p.rapidapi.com/download/${id}`, {
+    headers: {
+      'X-RapidAPI-Key': 'd11a10bef4mshdaec2c0d88bdbf9p152dd8jsn748f72f89ef3',
+      'X-RapidAPI-Host': 'spotify-downloader1.p.rapidapi.com',
+    },
   });
 
   trackDownloadForm.audio = apiResponse.data.link;
