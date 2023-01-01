@@ -37,6 +37,7 @@ import router from './router';
 const path = require('path');
 const fs = require('fs');
 const { getCurrentWindow, globalShortcut } = require('@electron/remote');
+const { ipcRenderer } = require('electron');
 
 const audioElement = ref<HTMLAudioElement | null>(null);
 const windowMaximized = ref(false);
@@ -96,6 +97,11 @@ onMounted(() => {
     }
 
     playerStore.audioVolume -= 0.05;
+  });
+
+  ipcRenderer.on('update-available', () => {
+    playerStore.isNavBarDisabled = true;
+    router.push('/update');
   });
 });
 

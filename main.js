@@ -5,7 +5,7 @@ const { autoUpdater } = require('electron-updater');
 
 require('@electron/remote/main').initialize();
 
-autoUpdater.autoInstallOnAppQuit = true;
+autoUpdater.autoRunAppAfterInstall = true;
 
 let mainWindow;
 let forceQuit = false;
@@ -21,6 +21,8 @@ function createWindow() {
   mainWindow = new BrowserWindow({
     width: 1200,
     height: 700,
+    minWidth: 800,
+    minHeight: 420,
     titleBarStyle: 'hidden',
     titleBarOverlay: {
       symbolColor: '#20b2aa',
@@ -97,6 +99,19 @@ if (!gotTheLock) {
         event.preventDefault();
         mainWindow.hide();
       }
+    });
+
+    autoUpdater.on('update-available', () => {
+      showOrRestore();
+      mainWindow.webContents.send('update-available');
+    });
+
+    autoUpdater.on('download-progress', (progress) => {
+      mainWindow.webContents.send('download-progress', progress.percent);
+    });
+
+    autoUpdater.on('update-downloaded', () => {
+      autoUpdater.quitAndInstall();
     });
   });
 }

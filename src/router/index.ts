@@ -29,6 +29,12 @@ const router = createRouter({
       meta: { title: 'Add from Spotify' },
       component: () => import('../views/AddSpotifyView.vue'),
     },
+    {
+      path: '/update',
+      name: 'update',
+      meta: { title: 'Update' },
+      component: () => import('../views/UpdateView.vue'),
+    },
   ],
 });
 

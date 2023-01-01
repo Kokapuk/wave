@@ -3,7 +3,7 @@
     <Track @delete-request="deleteRequestHandle" v-for="track in tracks" :track="track" />
   </div>
   <span v-else class="empty-placeholder-center">You library is empty</span>
-  <Modal title="Delete track" :show="modalShow">
+  <Modal @close-request="() => (modalShow = false)" title="Delete track" :show="modalShow">
     <span v-if="deleteRequestTrack !== null">
       Are you sure you want to delete <b>{{ deleteRequestTrack!.artist }} - {{ deleteRequestTrack!.name }} </b>?
     </span>

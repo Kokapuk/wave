@@ -2,22 +2,24 @@
   <form class="add-container" @submit.prevent="submitHandle">
     <div class="param-container">
       <span class="param-title">Audio</span>
-      <input v-model="audio" type="url" class="input" required />
+      <input v-model="audio" placeholder="Url or path" type="text" class="input param-input" required />
+      <button type="button" @click="audioChooseClickHandle" class="button param-button">Choose</button>
     </div>
 
     <div class="param-container">
       <span class="param-title">Cover</span>
-      <input v-model="cover" type="url" class="input" required />
+      <input v-model="cover" placeholder="Url or path" type="text" class="input param-input" required />
+      <button type="button" @click="coverChooseClickHandle" class="button param-button">Choose</button>
     </div>
 
     <div class="param-container">
       <span class="param-title">Name</span>
-      <input v-model="name" type="text" class="input" required />
+      <input v-model="name" type="text" class="input param-input" required />
     </div>
 
     <div class="param-container">
       <span class="param-title">Artist</span>
-      <input v-model="artist" type="text" class="input" required />
+      <input v-model="artist" type="text" class="input param-input" required />
     </div>
 
     <button style="align-self: flex-end" class="button" type="submit">Add</button>
@@ -33,6 +35,7 @@ import router from '@/router';
 import { ref } from 'vue';
 import ProgressBar from '../components/Controls/ProgressBar.vue';
 import { usePlayerStore } from '../stores/player';
+const { dialog, getCurrentWindow } = require('@electron/remote');
 
 const audio = ref<string>('');
 const cover = ref<string>('');
@@ -46,7 +49,9 @@ async function submitHandle() {
   loading.value = true;
   playerStore.isNavBarDisabled = true;
 
-  await playerStore.downloadTrack(
+  // if (path.exist) {
+  // }
+  await playerStore.loadTrack(
     { id: '', audio: audio.value, cover: cover.value, name: name.value, artist: artist.value },
     (percentage: number) => {
       progress.value = percentage;
@@ -63,6 +68,28 @@ async function submitHandle() {
 
   router.push('/');
 }
+
+function audioChooseClickHandle() {
+  const selectedPath: string[] | undefined = dialog.showOpenDialogSync(getCurrentWindow(), {
+    title: 'Chosing audio file',
+    buttonLabel: 'Choose audio',
+    properties: ['openFile'],
+  });
+
+  if (selectedPath === undefined) return;
+  audio.value = selectedPath[0];
+}
+
+function coverChooseClickHandle() {
+  const selectedPath: string[] | undefined = dialog.showOpenDialogSync(getCurrentWindow(), {
+    title: 'Chosing cover file',
+    buttonLabel: 'Choose cover',
+    properties: ['openFile'],
+  });
+
+  if (selectedPath === undefined) return;
+  cover.value = selectedPath[0];
+}
 </script>
 
 <style scoped>
@@ -76,6 +103,7 @@ async function submitHandle() {
 .param-container {
   display: flex;
   align-items: center;
+  gap: 15px;
 }
 
 .param-title {
@@ -85,8 +113,13 @@ async function submitHandle() {
   font-weight: 600;
 }
 
-.input {
+.param-input {
+  padding: 10px 15px;
   width: 100%;
+}
+
+.param-button {
+  flex: 0 0 min-content;
 }
 
 .loading-container {

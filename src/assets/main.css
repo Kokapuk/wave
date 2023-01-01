@@ -29,6 +29,10 @@
   user-select: inherit;
 }
 
+b {
+  color: inherit;
+}
+
 ::-webkit-scrollbar {
   background-color: transparent;
   width: 5px;
@@ -95,6 +99,7 @@ body,
   color: rgb(var(--font-color-dark));
   font-weight: 300;
   font-size: 20px;
+  text-align: center;
 }
 
 .empty-placeholder-center {
@@ -129,4 +134,8 @@ body,
   width: 100%;
   height: 1px;
   background-color: var(--b-seperator-color);
+}
+
+.color-accent {
+  color: rgb(var(--accent));
 }

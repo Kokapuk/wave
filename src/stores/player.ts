@@ -96,41 +96,53 @@ export const usePlayerStore = defineStore('player', () => {
     usePlayerStore().setTrackList(tracks);
   }
 
-  async function downloadTrack(track: ITrack, progressChange: (percentage: number) => void) {
+  async function loadTrack(track: ITrack, progressChange: (percentage: number) => void) {
     const trackId = uid(12);
     const trackPath = path.join(useSettingsStore().getMusicStoragePath(), trackId);
     let downloadSuccesfull = true;
 
-    let downloader = new Downloader({
-      url: track.audio,
-      directory: trackPath,
-      onProgress: progressChange,
-    });
+    if (fs.existsSync(track.audio)) {
+      if (!fs.existsSync(trackPath)) {
+        fs.mkdirSync(trackPath, { recursive: true });
+      }
 
-    try {
-      const { filePath } = await downloader.download();
+      fs.copyFileSync(track.audio, path.join(trackPath, 'audio.mp3'));
+    } else {
+      try {
+        let downloader = new Downloader({
+          url: track.audio,
+          directory: trackPath,
+          onProgress: progressChange,
+        });
 
-      fs.copyFileSync(filePath, path.join(trackPath, 'audio.mp3'));
-      fs.unlinkSync(filePath);
-    } catch (error) {
-      console.log('Audio download failed', error);
-      downloadSuccesfull = false;
+        const { filePath } = await downloader.download();
+
+        fs.copyFileSync(filePath, path.join(trackPath, 'audio.mp3'));
+        fs.unlinkSync(filePath);
+      } catch (error) {
+        console.log('Audio download failed', error);
+        downloadSuccesfull = false;
+      }
     }
 
-    downloader = new Downloader({
-      url: track.cover,
-      directory: trackPath,
-      onProgress: progressChange,
-    });
+    if (fs.existsSync(track.cover)) {
+      fs.copyFileSync(track.cover, path.join(trackPath, 'cover.png'));
+    } else {
+      let downloader = new Downloader({
+        url: track.cover,
+        directory: trackPath,
+        onProgress: progressChange,
+      });
 
-    try {
-      const { filePath } = await downloader.download();
+      try {
+        const { filePath } = await downloader.download();
 
-      fs.copyFileSync(filePath, path.join(trackPath, 'cover.png'));
-      fs.unlinkSync(filePath);
-    } catch (error) {
-      console.log('Cover download failed', error);
-      downloadSuccesfull = false;
+        fs.copyFileSync(filePath, path.join(trackPath, 'cover.png'));
+        fs.unlinkSync(filePath);
+      } catch (error) {
+        console.log('Cover download failed', error);
+        downloadSuccesfull = false;
+      }
     }
 
     if (downloadSuccesfull) {
@@ -165,6 +177,6 @@ export const usePlayerStore = defineStore('player', () => {
     getPreviousTrack,
     getNextTrack,
     importTracks,
-    downloadTrack,
+    loadTrack,
   };
 });

@@ -140,26 +140,35 @@ async function addClickHandle(trackDownloadForm: ITrack, id: string) {
   downloading.value = true;
   playerStore.isNavBarDisabled = true;
 
-  const apiResponse = await axios.get(`https://spotify-downloader1.p.rapidapi.com/download/${id}`, {
-    headers: {
-      'X-RapidAPI-Key': 'd11a10bef4mshdaec2c0d88bdbf9p152dd8jsn748f72f89ef3',
-      'X-RapidAPI-Host': 'spotify-downloader1.p.rapidapi.com',
-    },
-  });
+  try {
+    // const apiResponse = await axios.get(`https://spotify-downloader1.p.rapidapi.com/download/${id}`, {
+    //   headers: {
+    //     'X-RapidAPI-Key': 'd11a10bef4mshdaec2c0d88bdbf9p152dd8jsn748f72f89ef3',
+    //     'X-RapidAPI-Host': 'spotify-downloader1.p.rapidapi.com',
+    //   },
+    // });
 
-  trackDownloadForm.audio = apiResponse.data.link;
+    // trackDownloadForm.audio = apiResponse.data.link;
 
-  await playerStore.downloadTrack(trackDownloadForm, (percentage) => (progress.value = percentage));
+    const apiResponse = await axios.get(`https://spotify-scraper.p.rapidapi.com/v1/track/download`, {
+      params: {
+        track: id,
+      },
+      headers: {
+        'X-RapidAPI-Key': 'd11a10bef4mshdaec2c0d88bdbf9p152dd8jsn748f72f89ef3',
+        'X-RapidAPI-Host': 'spotify-scraper.p.rapidapi.com',
+      },
+    });
 
-  tracksByQuery.value = [];
-  searchQuery.value = '';
-  downloading.value = false;
+    trackDownloadForm.audio = apiResponse.data.youtubeVideo.audio[0].url;
+
+    await playerStore.loadTrack(trackDownloadForm, (percentage) => (progress.value = percentage));
+  } catch (e: any) {
+    console.log('Failed to download the track: ', e.message);
+  }
+
   playerStore.isNavBarDisabled = false;
   router.push('/');
-}
-
-function testHandle() {
-  console.log('focus in');
 }
 </script>
 

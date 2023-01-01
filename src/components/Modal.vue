@@ -1,6 +1,6 @@
 <template>
-  <div :class="['modal-bg', props.show && 'show']">
-    <div :class="['modal-content', props.show && 'show']">
+  <div @click="() => emit('closeRequest')" :class="['modal-bg', props.show && 'show']">
+    <div @click.stop :class="['modal-content', props.show && 'show']">
       <h2 class="modal-title">{{ props.title }}</h2>
       <div class="separator"></div>
       <slot />
@@ -15,6 +15,7 @@ interface IProps {
 }
 
 const props = defineProps<IProps>();
+const emit = defineEmits(['closeRequest']);
 </script>
 
 <style scoped>
@@ -42,7 +43,7 @@ const props = defineProps<IProps>();
 .modal-content {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 15px;
   padding: 15px 25px;
   min-width: 250px;
   max-width: 450px;
