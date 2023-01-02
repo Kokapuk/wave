@@ -3,13 +3,13 @@
     <div class="param-container">
       <span class="param-title">Audio</span>
       <input v-model="audio" placeholder="Url or path" type="text" class="input param-input" required />
-      <button type="button" @click="audioChooseClickHandle" class="button param-button">Choose</button>
+      <Button type="button" @click="audioChooseClickHandle" class="param-button">Choose</Button>
     </div>
 
     <div class="param-container">
       <span class="param-title">Cover</span>
       <input v-model="cover" placeholder="Url or path" type="text" class="input param-input" required />
-      <button type="button" @click="coverChooseClickHandle" class="button param-button">Choose</button>
+      <Button type="button" @click="coverChooseClickHandle" class="param-button">Choose</Button>
     </div>
 
     <div class="param-container">
@@ -21,8 +21,6 @@
       <span class="param-title">Artist</span>
       <input v-model="artist" type="text" class="input param-input" required />
     </div>
-
-    <button style="align-self: flex-end" class="button" type="submit">Add</button>
   </form>
   <div v-if="loading" class="loading-container">
     <ProgressBar :progress="progress" />
@@ -34,6 +32,7 @@
 import router from '@/router';
 import { ref } from 'vue';
 import ProgressBar from '../components/Controls/ProgressBar.vue';
+import Button from '../components/Controls/Button.vue';
 import { usePlayerStore } from '../stores/player';
 const { dialog, getCurrentWindow } = require('@electron/remote');
 

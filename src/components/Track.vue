@@ -1,6 +1,7 @@
 <template>
   <div class="track">
     <button
+      @contextmenu="showContextMenuClickHandle"
       @click="playPauseHandle"
       class="track-cover"
       :style="{ backgroundImage: `url('file://${props.track.cover.replaceAll('\\', '/')}')` }">
@@ -13,22 +14,35 @@
         </Transition>
       </div>
     </button>
-    <button @click="() => emit('deleteRequest', props.track)" class="button-delete">
-      <Close />
+    <button @click="showContextMenuClickHandle" class="context-menu-button">
+      <Ellipsis />
     </button>
+    <!-- <button @click="() => emit('deleteRequest', props.track)" class="button-delete">
+      <Close />
+    </button> -->
     <span :class="['track-name', { active: props.track.id === usePlayerStore().currentTrackId }]">{{ props.track.name }}</span>
     <span :class="['track-artist', { active: props.track.id === usePlayerStore().currentTrackId }]">
       {{ props.track.artist }}
     </span>
   </div>
+  <ContextMenu
+    @close="() => (contextMenuShown = false)"
+    :show="contextMenuShown"
+    :offset-x="contextMenuPosition.x"
+    :offset-y="contextMenuPosition.y"
+    :menu-items="contextMenuItems" />
 </template>
 
 <script setup lang="ts">
 import CirclePlay from './Icons/CirclePlay.vue';
 import CirclePause from './Icons/CirclePause.vue';
-import Close from './Icons/Close.vue';
+import Ellipsis from './Icons/Ellipsis.vue';
 import { usePlayerStore } from '../stores/player';
 import type { ITrack } from '@/types';
+import { ref } from 'vue';
+import ContextMenu, { type IMenuItem } from './Controls/ContextMenu.vue';
+const { shell } = require('electron');
+const path = require('path');
 
 interface IProps {
   track: ITrack;
@@ -37,6 +51,35 @@ interface IProps {
 const props = defineProps<IProps>();
 const emit = defineEmits(['deleteRequest']);
 const playerStore = usePlayerStore();
+const contextMenuShown = ref(false);
+const contextMenuPosition = ref({ x: 0, y: 0 });
+const contextMenuItems = ref<IMenuItem[]>([
+  {
+    text: `${props.track.artist} - ${props.track.name}`,
+    disabled: true,
+    separator: true,
+  },
+  {
+    text: 'Show in explorer',
+    clickHandle() {
+      shell.showItemInFolder(path.join(props.track.audio, '../'));
+    },
+  },
+  {
+    text: 'Copy artist and track name',
+    separator: true,
+    clickHandle() {
+      navigator.clipboard.writeText(`${props.track.artist} - ${props.track.name}`);
+    },
+  },
+  {
+    text: 'Delete',
+    danger: true,
+    clickHandle() {
+      emit('deleteRequest', props.track);
+    },
+  },
+]);
 
 function playPauseHandle() {
   if (playerStore.currentTrackId !== props.track.id) {
@@ -44,6 +87,12 @@ function playPauseHandle() {
   } else {
     playerStore.audioIsPaused = !playerStore.audioIsPaused;
   }
+}
+
+function showContextMenuClickHandle(event: MouseEvent) {
+  contextMenuShown.value = true;
+  contextMenuPosition.value.x = event.clientX;
+  contextMenuPosition.value.y = event.clientY;
 }
 </script>
 
@@ -55,7 +104,6 @@ function playPauseHandle() {
   flex-direction: column;
   gap: 5px;
   overflow: hidden;
-  user-select: text;
 }
 
 .track-cover {
@@ -107,10 +155,10 @@ function playPauseHandle() {
   scale: 1 !important;
 }
 
-.button-delete {
+.context-menu-button {
   position: absolute;
   height: 12.5%;
-  width: 12.5%;
+  aspect-ratio: 1/1;
   right: -12.5%;
   top: -12.5%;
   background-color: transparent;
@@ -119,7 +167,7 @@ function playPauseHandle() {
   transition: var(--transition);
 }
 
-.track:hover .button-delete {
+.track:hover .context-menu-button {
   right: 2%;
   top: 0;
   opacity: 1;

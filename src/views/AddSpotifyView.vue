@@ -8,7 +8,7 @@
         type="search"
         required
         minlength="3" />
-      <button type="submit" class="search-button button">Search</button>
+      <Button type="submit" class="search-button">Search</Button>
     </form>
     <div v-if="!downloading && !loading" class="track-list">
       <div v-for="track in tracksByQuery" class="spotify-track">
@@ -19,7 +19,7 @@
           frameBorder="0"
           allow="autoplay; clipboard-write; encrypted-media; fullscreen; picture-in-picture"
           loading="lazy"></iframe>
-        <button
+        <Button
           @click="
             () =>
               addClickHandle(
@@ -27,9 +27,9 @@
                 track.id
               )
           "
-          class="button add-button">
+          class="add-button">
           Add
-        </button>
+        </Button>
       </div>
     </div>
     <div v-else-if="loading" class="center"><LoadingIndicator /></div>
@@ -45,6 +45,7 @@ import { usePlayerStore } from '@/stores/player';
 import { useSettingsStore } from '@/stores/settings';
 import LoadingIndicator from '@/components/Controls/LoadingIndicator.vue';
 import ProgressBar from '@/components/Controls/ProgressBar.vue';
+import Button from '@/components/Controls/Button.vue';
 import router from '@/router';
 
 const playerStore = usePlayerStore();
@@ -214,6 +215,8 @@ async function addClickHandle(trackDownloadForm: ITrack, id: string) {
 
 .add-button {
   flex: 0 0 min-content;
+  height: 100%;
+  align-items: center;
 }
 
 .loading-container {

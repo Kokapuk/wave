@@ -9,8 +9,8 @@
     </span>
     <div class="separator"></div>
     <div class="modal-button-container">
-      <button @click="() => deleteTrack(deleteRequestTrack!)" class="button low-attention">Yes</button>
-      <button @click="() => (modalShow = false)" class="button">No</button>
+      <Button @click="() => deleteTrack(deleteRequestTrack!)">Yes</Button>
+      <Button @click="() => (modalShow = false)">No</Button>
     </div>
   </Modal>
 </template>
@@ -22,6 +22,7 @@ import { usePlayerStore } from '@/stores/player';
 import { useSettingsStore } from '@/stores/settings';
 import type { ITrack } from '@/types';
 import { ref } from 'vue';
+import Button from '@/components/Controls/Button.vue';
 
 const playerStore = usePlayerStore();
 playerStore.importTracks(useSettingsStore().getMusicStoragePath());

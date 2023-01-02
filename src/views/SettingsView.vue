@@ -3,7 +3,7 @@
     <div class="param-container">
       <span class="param-title">Music storage path</span>
       <input :value="musicStoragePath" class="param-input" readonly />
-      <button @click="chooseClickHandle" class="button">Choose</button>
+      <Button @click="chooseClickHandle">Choose</Button>
     </div>
   </div>
 </template>
@@ -12,6 +12,7 @@
 import { usePlayerStore } from '@/stores/player';
 import { useSettingsStore } from '@/stores/settings';
 import { ref } from 'vue';
+import Button from '@/components/Controls/Button.vue';
 const { dialog, getCurrentWindow } = require('@electron/remote');
 const fs = require('fs');
 const path = require('path');
