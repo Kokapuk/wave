@@ -31,7 +31,7 @@ import { RouterLink, RouterView } from 'vue-router';
 import { usePlayerStore } from './stores/player';
 import Player from './components/Player.vue';
 import NavigationBar from './components/NavBar.vue';
-import { computed, onMounted, ref, watch } from 'vue';
+import { computed, onBeforeMount, onMounted, ref, watch } from 'vue';
 import { useSettingsStore } from './stores/settings';
 import router from './router';
 const path = require('path');
@@ -43,6 +43,20 @@ const audioElement = ref<HTMLAudioElement | null>(null);
 const windowMaximized = ref(false);
 const playerStore = usePlayerStore();
 const audioBlob = computed(() => generateBlob(playerStore.getTrackById(playerStore.currentTrackId!).audio));
+
+onBeforeMount(() => {
+  getCurrentWindow().on('maximize', () => {
+    windowMaximized.value = true;
+    useSettingsStore().setMaximized(true);
+  });
+
+  getCurrentWindow().on('unmaximize', () => {
+    windowMaximized.value = false;
+    useSettingsStore().setMaximized(false);
+  });
+
+  useSettingsStore().getMaximized() ? getCurrentWindow().maximize() : getCurrentWindow().unmaximize();
+});
 
 onMounted(() => {
   if (!fs.existsSync(useSettingsStore().defaultMusicStoragePath)) {
@@ -58,18 +72,6 @@ onMounted(() => {
     router.go(0);
   }
 
-  getCurrentWindow().on('maximize', () => {
-    windowMaximized.value = true;
-    useSettingsStore().setMaximized(true);
-  });
-
-  getCurrentWindow().on('unmaximize', () => {
-    windowMaximized.value = false;
-    useSettingsStore().setMaximized(false);
-  });
-
-  useSettingsStore().getMaximized() ? getCurrentWindow().maximize() : getCurrentWindow().unmaximize();
-
   navigator.mediaSession.setActionHandler('previoustrack', () => {
     playerStore.currentTrackId = playerStore.getPreviousTrack(playerStore.currentTrackId!).id;
   });
@@ -84,7 +86,7 @@ onMounted(() => {
   });
 
   globalShortcut.register('numadd', () => {
-    if (playerStore.audioVolume > 0.95) {
+    if (Number(playerStore.audioVolume.toFixed(2)) >= 0.95) {
       playerStore.audioVolume = 1;
       return;
     }
@@ -92,7 +94,7 @@ onMounted(() => {
     playerStore.audioVolume += 0.05;
   });
   globalShortcut.register('numsub', () => {
-    if (playerStore.audioVolume <= 0.05) {
+    if (Number(playerStore.audioVolume.toFixed(2)) <= 0.05) {
       return;
     }
 

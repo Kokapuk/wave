@@ -17,9 +17,6 @@
     <button @click="showContextMenuClickHandle" class="context-menu-button">
       <Ellipsis />
     </button>
-    <!-- <button @click="() => emit('deleteRequest', props.track)" class="button-delete">
-      <Close />
-    </button> -->
     <span :class="['track-name', { active: props.track.id === usePlayerStore().currentTrackId }]">{{ props.track.name }}</span>
     <span :class="['track-artist', { active: props.track.id === usePlayerStore().currentTrackId }]">
       {{ props.track.artist }}

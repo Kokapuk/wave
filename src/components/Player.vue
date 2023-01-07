@@ -52,7 +52,10 @@
       </div>
     </div>
     <div class="player-right">
-      <Tooltip :text="playerStore.audioMuted ? 'Unmute' : 'Mute'" :positioning="TooltipPositioning.top">
+      <Tooltip
+        :key="JSON.stringify(playerStore.audioMuted)"
+        :text="playerStore.audioMuted ? 'Unmute' : 'Mute'"
+        :positioning="TooltipPositioning.top">
         <button @click="() => (playerStore.audioMuted = !playerStore.audioMuted)" class="player-button mute-button">
           <SpeakerMuted v-if="playerStore.audioMuted || playerStore.audioVolume === 0" />
           <Speaker v-else />

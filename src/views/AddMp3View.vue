@@ -2,25 +2,27 @@
   <form class="add-container" @submit.prevent="submitHandle">
     <div class="param-container">
       <span class="param-title">Audio</span>
-      <input v-model="audio" placeholder="Url or path" type="text" class="input param-input" required />
+      <input v-model.trim="audio" placeholder="Url or path" type="text" class="input param-input" required />
       <Button type="button" @click="audioChooseClickHandle" class="param-button">Choose</Button>
     </div>
 
     <div class="param-container">
       <span class="param-title">Cover</span>
-      <input v-model="cover" placeholder="Url or path" type="text" class="input param-input" required />
+      <input v-model.trim="cover" placeholder="Url or path" type="text" class="input param-input" required />
       <Button type="button" @click="coverChooseClickHandle" class="param-button">Choose</Button>
     </div>
 
     <div class="param-container">
       <span class="param-title">Name</span>
-      <input v-model="name" type="text" class="input param-input" required />
+      <input v-model.trim="name" type="text" class="input param-input" required />
     </div>
 
     <div class="param-container">
       <span class="param-title">Artist</span>
-      <input v-model="artist" type="text" class="input param-input" required />
+      <input v-model.trim="artist" type="text" class="input param-input" required />
     </div>
+
+    <Button type="submit">Add</Button>
   </form>
   <div v-if="loading" class="loading-container">
     <ProgressBar :progress="progress" />

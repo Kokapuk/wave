@@ -30,11 +30,10 @@ import Squares from './Icons/Squares.vue';
 import Spotify from './Icons/Spotify.vue';
 import { usePlayerStore } from '@/stores/player';
 import { computed } from 'vue';
-
-const playerStore = usePlayerStore();
 const { app } = require('@electron/remote');
 
-const appVersion = computed(() => app.getVersion());
+const playerStore = usePlayerStore();
+const appVersion = computed(() => app.getVersion() + (import.meta.env.DEV && ' DEV'));
 </script>
 
 <style scoped>
@@ -60,6 +59,7 @@ const appVersion = computed(() => app.getVersion());
 .logo {
   stroke: rgb(var(--accent));
   height: 44px;
+  transition: opacity 10ms;
 }
 
 .logo-text {

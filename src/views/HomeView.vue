@@ -37,7 +37,11 @@ function deleteRequestHandle(track: ITrack) {
 
 function deleteTrack(track: ITrack) {
   modalShow.value = false;
-  playerStore.currentTrackId = null;
+
+  if (playerStore.currentTrackId === track.id) {
+    playerStore.currentTrackId = null;
+  }
+
   playerStore.deleteTrack(track.id);
   tracks.value = playerStore.getTrackList();
 }
