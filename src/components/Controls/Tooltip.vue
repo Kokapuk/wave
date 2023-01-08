@@ -1,5 +1,5 @@
 <template>
-  <div class="tooltip">
+  <div :class="['tooltip', props.hide && 'hidden']">
     <slot />
     <span :class="['tooltip-text', props.positioning]">
       {{ props.text }}
@@ -14,6 +14,7 @@ import type { TooltipPositioning } from '../../types';
 interface IProps {
   text: string;
   positioning: TooltipPositioning;
+  hide?: boolean;
 }
 
 const props = defineProps<IProps>();
@@ -103,7 +104,7 @@ const props = defineProps<IProps>();
   rotate: -45deg;
 }
 
-.tooltip:hover .tooltip-text {
+.tooltip:hover:not(.hidden) .tooltip-text {
   opacity: 1;
   transform: translateX(0px);
   transform: translateY(0px);

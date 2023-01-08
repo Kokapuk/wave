@@ -17,3 +17,8 @@ export interface ISpotifyToken {
   token: string;
   expires: number;
 }
+
+export interface ITrackPlaybackRate {
+  trackId: string;
+  playbackRate: number;
+}

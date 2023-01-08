@@ -11,7 +11,7 @@
       <div class="media-buttons-container">
         <Tooltip text="Loop" :positioning="TooltipPositioning.top">
           <button @click="() => (playerStore.audioLoop = !playerStore.audioLoop)" class="player-button small">
-            <SquareArrows :class="{ 'icon-active': playerStore.audioLoop }" />
+            <SquareArrows style="transition: none" :class="{ 'icon-active': playerStore.audioLoop }" />
           </button>
         </Tooltip>
 
@@ -36,41 +36,60 @@
 
         <Tooltip text="Shuffle" :positioning="TooltipPositioning.top">
           <button @click="() => (playerStore.audioShuffle = !playerStore.audioShuffle)" class="player-button small">
-            <Shuffle :class="{ 'icon-active': playerStore.audioShuffle }" />
+            <Shuffle style="transition: none" :class="{ 'icon-active': playerStore.audioShuffle }" />
           </button>
         </Tooltip>
       </div>
       <div class="timeline">
-        <span class="slider-value">{{ secondsToTimestamp(playerStore.audioCurrentTime) }}</span>
+        <span class="slider-value" style="text-align: start">{{ secondsToTimestamp(playerStore.audioCurrentTime) }}</span>
         <Slider
           @input="(event: Event) => emit('seek', (event.target as HTMLInputElement).valueAsNumber)"
           :model-value="playerStore.audioCurrentTime"
           step="1"
           :min="0"
           :max="playerStore.audioDuration" />
-        <span class="slider-value">{{ secondsToTimestamp(playerStore.audioDuration) }}</span>
+        <span class="slider-value" style="text-aling: end">{{ secondsToTimestamp(playerStore.audioDuration) }}</span>
       </div>
     </div>
     <div class="player-right">
-      <Tooltip
-        :key="JSON.stringify(playerStore.audioMuted)"
-        :text="playerStore.audioMuted ? 'Unmute' : 'Mute'"
-        :positioning="TooltipPositioning.top">
-        <button @click="() => (playerStore.audioMuted = !playerStore.audioMuted)" class="player-button mute-button">
-          <SpeakerMuted v-if="playerStore.audioMuted || playerStore.audioVolume === 0" />
-          <Speaker v-else />
-        </button>
-      </Tooltip>
-      <Tooltip text="Num+/Num-" :positioning="TooltipPositioning.top">
-        <Slider
-          class="volume-slider"
-          v-model="playerStore.audioVolume"
-          @change="volumeSliderChangeHandle"
-          step=".01"
-          :min="0"
-          :max="1" />
-      </Tooltip>
-      <span style="flex: 0 0 4ch; text-align: right" class="slider-value">{{ Math.round(playerStore.audioVolume * 100) }}%</span>
+      <div class="player-slider-container">
+        <Tooltip
+          :key="JSON.stringify(playerStore.audioMuted)"
+          :text="playerStore.audioMuted ? 'Unmute' : 'Mute'"
+          :positioning="TooltipPositioning.left">
+          <button @click="() => (playerStore.audioMuted = !playerStore.audioMuted)" class="player-button slider-button">
+            <SpeakerMuted v-if="playerStore.audioMuted || playerStore.audioVolume === 0" />
+            <Speaker v-else />
+          </button>
+        </Tooltip>
+        <Tooltip :hide="!useSettingsStore().getVolumeHotkeysEnabled()" text="Num+/Num-" :positioning="TooltipPositioning.top">
+          <Slider
+            class="volume-slider"
+            v-model="playerStore.audioVolume"
+            @change="volumeSliderChangeHandle"
+            step=".01"
+            :min="0"
+            :max="1" />
+        </Tooltip>
+        <span class="slider-value"> {{ Math.round(playerStore.audioVolume * 100) }}% </span>
+      </div>
+      <div class="player-slider-container">
+        <Tooltip text="Reset" :positioning="TooltipPositioning.left">
+          <button @click="playbackRateResetClickHandle" class="player-button slider-button">
+            <Clock />
+          </button>
+        </Tooltip>
+        <Tooltip :hide="!useSettingsStore().getVolumeHotkeysEnabled()" text="Num+/Num-" :positioning="TooltipPositioning.top">
+          <Slider
+            class="volume-slider"
+            v-model="playerStore.audioPlaybackRate"
+            @change="playbackRateSliderChangeHandle"
+            step=".05"
+            :min="0.5"
+            :max="2" />
+        </Tooltip>
+        <span class="slider-value"> {{ playerStore.audioPlaybackRate.toFixed(2) }}x </span>
+      </div>
     </div>
   </footer>
 </template>
@@ -90,6 +109,7 @@ import Tooltip from './Controls/Tooltip.vue';
 import { usePlayerStore } from '@/stores/player';
 import { onMounted, ref, watch } from 'vue';
 import { useSettingsStore } from '@/stores/settings';
+import Clock from './Icons/Clock.vue';
 
 const emit = defineEmits(['seek']);
 const currentTrack = ref<ITrack>(usePlayerStore().getTrackById(usePlayerStore().currentTrackId!));
@@ -115,6 +135,12 @@ function volumeSliderChangeHandle(event: Event) {
   useSettingsStore().setVolume((event.target as HTMLInputElement).valueAsNumber);
 }
 
+function playbackRateSliderChangeHandle(event: Event) {
+  const slider = event.target as HTMLInputElement;
+  playerStore.audioPlaybackRate = slider.valueAsNumber;
+  useSettingsStore().setTrackPlaybackRate({ trackId: playerStore.currentTrackId!, playbackRate: playerStore.audioPlaybackRate });
+}
+
 function playPreviousTrackClickHandle() {
   if (playerStore.audioCurrentTime < 5) {
     playerStore.currentTrackId = playerStore.getPreviousTrack(playerStore.currentTrackId!).id;
@@ -122,6 +148,11 @@ function playPreviousTrackClickHandle() {
   }
 
   emit('seek', 0);
+}
+
+function playbackRateResetClickHandle() {
+  useSettingsStore().setTrackPlaybackRate({ trackId: playerStore.currentTrackId!, playbackRate: 1 });
+  playerStore.audioPlaybackRate = 1;
 }
 </script>
 
@@ -219,14 +250,23 @@ footer {
 
 .player-right {
   display: flex;
+  flex-direction: column;
   flex: 0 0 20%;
   height: 100%;
-  gap: 10px;
+  align-items: right;
+  justify-content: center;
+  gap: 5px;
+}
+
+.player-slider-container {
+  display: flex;
+  flex: 0 0 20%;
   align-items: center;
+  gap: 10px;
   justify-content: right;
 }
 
-.mute-button {
+.slider-button {
   width: 35px;
   height: 35px;
   padding: 9px;
@@ -241,5 +281,6 @@ footer {
   font-weight: 400;
   font-size: 13px;
   flex: 0 0 5ch;
+  text-align: right;
 }
 </style>

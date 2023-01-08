@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia';
-import type { ISpotifyToken } from '../types';
+import type { ISpotifyToken, ITrackPlaybackRate } from '../types';
 const { app } = require('@electron/remote');
 const path = require('path');
 
@@ -38,17 +38,63 @@ export const useSettingsStore = defineStore('settings', () => {
   }
 
   function setSpotifyToken(token: ISpotifyToken) {
-    localStorage.setItem('settings:spotify-token', JSON.stringify(token));
+    localStorage.setItem('saved:spotify-token', JSON.stringify(token));
   }
 
   function getSpotifyToken(): ISpotifyToken | null {
-    let storageToken = localStorage.getItem('settings:spotify-token');
+    let storageToken = localStorage.getItem('saved:spotify-token');
     if (storageToken === null) return null;
 
     let parsedToken: ISpotifyToken = JSON.parse(storageToken);
     if (Date.now() > parsedToken.expires) return null;
 
     return parsedToken;
+  }
+
+  function setVolumeHotkeysEnabled(enabled: boolean) {
+    localStorage.setItem('settings:volume-hotkeys-enabled', JSON.stringify(enabled));
+  }
+
+  function getVolumeHotkeysEnabled(): boolean {
+    let storageEnabled = localStorage.getItem('settings:volume-hotkeys-enabled');
+
+    if (storageEnabled === null) return true;
+    return JSON.parse(storageEnabled);
+  }
+
+  function setTrackPlaybackRate(trackPlaybackRate: ITrackPlaybackRate) {
+    let storageTracksPlaybackRate = localStorage.getItem('saved:tracks-playback-rate');
+
+    if (storageTracksPlaybackRate === null) {
+      localStorage.setItem('saved:tracks-playback-rate', JSON.stringify([trackPlaybackRate]));
+      return;
+    }
+
+    let trackPlaybackRateList: ITrackPlaybackRate[] = JSON.parse(storageTracksPlaybackRate);
+
+    if (trackPlaybackRateList.some((item) => item.trackId === trackPlaybackRate.trackId)) {
+      trackPlaybackRateList = trackPlaybackRateList.filter((item) => item.trackId !== trackPlaybackRate.trackId);
+    }
+
+    trackPlaybackRateList.push(trackPlaybackRate);
+
+    localStorage.setItem('saved:tracks-playback-rate', JSON.stringify(trackPlaybackRateList));
+  }
+
+  function getTrackPlaybackRate(trackId: string): number {
+    let storageTracksPlaybackRate = localStorage.getItem('saved:tracks-playback-rate');
+
+    if (storageTracksPlaybackRate === null) {
+      return 1;
+    }
+
+    let trackPlaybackRateList: ITrackPlaybackRate[] = JSON.parse(storageTracksPlaybackRate);
+
+    if (!trackPlaybackRateList.some((item) => item.trackId === trackId)) {
+      return 1;
+    }
+
+    return trackPlaybackRateList.find((item) => item.trackId === trackId)!.playbackRate;
   }
 
   return {
@@ -61,5 +107,9 @@ export const useSettingsStore = defineStore('settings', () => {
     getMaximized,
     setSpotifyToken,
     getSpotifyToken,
+    setVolumeHotkeysEnabled,
+    getVolumeHotkeysEnabled,
+    setTrackPlaybackRate,
+    getTrackPlaybackRate,
   };
 });

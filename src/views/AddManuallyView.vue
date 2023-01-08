@@ -75,6 +75,10 @@ function audioChooseClickHandle() {
     title: 'Chosing audio file',
     buttonLabel: 'Choose audio',
     properties: ['openFile'],
+    filters: [
+      { name: 'Audio', extensions: ['m4a', 'flac', 'mp3', 'mp4', 'wav', 'aac', 'ogg'] },
+      { name: 'All Files', extensions: ['*'] },
+    ],
   });
 
   if (selectedPath === undefined) return;
@@ -86,6 +90,10 @@ function coverChooseClickHandle() {
     title: 'Chosing cover file',
     buttonLabel: 'Choose cover',
     properties: ['openFile'],
+    filters: [
+      { name: 'Image', extensions: ['png', 'jpg', 'jpeg', 'bmp', 'webp'] },
+      { name: 'All Files', extensions: ['*'] },
+    ],
   });
 
   if (selectedPath === undefined) return;

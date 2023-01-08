@@ -21,7 +21,7 @@ const router = createRouter({
       path: '/add/mp3',
       name: 'add mp3',
       meta: { title: 'Add MP3' },
-      component: () => import('../views/AddMp3View.vue'),
+      component: () => import('../views/AddManuallyView.vue'),
     },
     {
       path: '/add/spotify',

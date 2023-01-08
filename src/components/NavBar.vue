@@ -12,7 +12,7 @@
         <Gear class="nav-link-icon" /> Settings
       </RouterLink>
       <RouterLink :class="['nav-link', playerStore.isNavBarDisabled && 'disabled']" to="/add/mp3">
-        <Plus class="nav-link-icon" /> Add MP3
+        <Plus class="nav-link-icon" /> Add manually
       </RouterLink>
       <RouterLink :class="['nav-link', playerStore.isNavBarDisabled && 'disabled']" to="/add/spotify">
         <Spotify class="nav-link-icon" /> Add from Spotify
@@ -33,7 +33,7 @@ import { computed } from 'vue';
 const { app } = require('@electron/remote');
 
 const playerStore = usePlayerStore();
-const appVersion = computed(() => app.getVersion() + (import.meta.env.DEV && ' DEV'));
+const appVersion = computed(() => app.getVersion() + (import.meta.env.DEV ? ' DEV' : ''));
 </script>
 
 <style scoped>

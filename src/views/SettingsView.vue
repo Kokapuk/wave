@@ -5,6 +5,14 @@
       <input :value="musicStoragePath" class="param-input" readonly />
       <Button @click="chooseClickHandle">Choose</Button>
     </div>
+    <div class="param-container">
+      <span class="param-title">Use volume hotkeys (restart needed)</span>
+      <input
+        @change="(event) => useSettingsStore().setVolumeHotkeysEnabled((event.target as HTMLInputElement).checked)"
+        :checked="volumeHotkeysEnabled"
+        type="checkbox"
+        class="switch" />
+    </div>
   </div>
 </template>
 
@@ -18,6 +26,7 @@ const fs = require('fs');
 const path = require('path');
 
 const musicStoragePath = ref(useSettingsStore().getMusicStoragePath());
+const volumeHotkeysEnabled = ref(useSettingsStore().getVolumeHotkeysEnabled());
 
 function chooseClickHandle() {
   const selectedPath: string[] | undefined = dialog.showOpenDialogSync(getCurrentWindow(), {

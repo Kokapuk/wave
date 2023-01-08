@@ -17,6 +17,7 @@ export const usePlayerStore = defineStore('player', () => {
   const audioMuted = ref(false);
   const audioLoop = ref(false);
   const audioShuffle = ref(false);
+  const audioPlaybackRate = ref(1);
   const isNavBarDisabled = ref(false);
 
   function getTrackList(): ITrack[] {
@@ -168,6 +169,7 @@ export const usePlayerStore = defineStore('player', () => {
     audioMuted,
     audioLoop,
     audioShuffle,
+    audioPlaybackRate,
     isNavBarDisabled,
     getTrackList,
     setTrackList,

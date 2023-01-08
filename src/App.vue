@@ -85,21 +85,23 @@ onMounted(() => {
     playerStore.audioIsPaused = true;
   });
 
-  globalShortcut.register('numadd', () => {
-    if (Number(playerStore.audioVolume.toFixed(2)) >= 0.95) {
-      playerStore.audioVolume = 1;
-      return;
-    }
+  if (useSettingsStore().getVolumeHotkeysEnabled()) {
+    globalShortcut.register('numadd', () => {
+      if (Number(playerStore.audioVolume.toFixed(2)) >= 0.95) {
+        playerStore.audioVolume = 1;
+        return;
+      }
 
-    playerStore.audioVolume += 0.05;
-  });
-  globalShortcut.register('numsub', () => {
-    if (Number(playerStore.audioVolume.toFixed(2)) <= 0.05) {
-      return;
-    }
+      playerStore.audioVolume += 0.05;
+    });
+    globalShortcut.register('numsub', () => {
+      if (Number(playerStore.audioVolume.toFixed(2)) <= 0.05) {
+        return;
+      }
 
-    playerStore.audioVolume -= 0.05;
-  });
+      playerStore.audioVolume -= 0.05;
+    });
+  }
 
   ipcRenderer.on('update-available', () => {
     playerStore.isNavBarDisabled = true;
@@ -112,6 +114,7 @@ watch(
   (newValue) => {
     if (newValue !== null) {
       const track = playerStore.getTrackById(newValue);
+      playerStore.audioPlaybackRate = useSettingsStore().getTrackPlaybackRate(newValue);
 
       navigator.mediaSession.metadata = new MediaMetadata({
         title: track.name,
@@ -125,25 +128,30 @@ watch(
 watch(
   () => playerStore.audioVolume,
   (newValue) => {
-    audioElement.value!.volume = newValue * 0.25;
-  },
-  { deep: true }
+    audioElement.value!.volume = newValue * newValue;
+  }
 );
 
 watch(
   () => playerStore.audioMuted,
   (newValue) => {
     audioElement.value!.muted = newValue;
-  },
-  { deep: true }
+  }
 );
 
 watch(
   () => playerStore.audioIsPaused,
   (newValue) => {
     newValue ? audioElement.value!.pause() : audioElement.value!.play();
-  },
-  { deep: true }
+  }
+);
+
+watch(
+  () => playerStore.audioPlaybackRate,
+  (newValue) => {
+    audioElement.value!.preservesPitch = false;
+    audioElement.value!.playbackRate = newValue;
+  }
 );
 
 function seekHandle(time: number) {
@@ -153,6 +161,8 @@ function seekHandle(time: number) {
 function audioLoadStartHandle() {
   playerStore.audioIsPaused = true;
   audioElement.value!.currentTime = 0;
+  audioElement.value!.preservesPitch = false;
+  audioElement.value!.playbackRate = playerStore.audioPlaybackRate;
 }
 
 function audioLoadHandle() {

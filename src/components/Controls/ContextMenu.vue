@@ -77,7 +77,7 @@ function menuItemClickHandle(event: MouseEvent, item: IMenuItem) {
 
 <style scoped>
 .menu-container {
-  z-index: 5;
+  z-index: 90;
   pointer-events: none;
   position: fixed;
   background-color: rgb(var(--light-gray));
