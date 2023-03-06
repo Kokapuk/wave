@@ -46,7 +46,7 @@ interface IProps {
 }
 
 const props = defineProps<IProps>();
-const emit = defineEmits(['deleteRequest']);
+const emit = defineEmits(['deleteRequest', 'renameRequest']);
 const playerStore = usePlayerStore();
 const contextMenuShown = ref(false);
 const contextMenuPosition = ref({ x: 0, y: 0 });
@@ -64,9 +64,15 @@ const contextMenuItems = ref<IMenuItem[]>([
   },
   {
     text: 'Copy artist and track name',
-    separator: true,
     clickHandle() {
       navigator.clipboard.writeText(`${props.track.artist} - ${props.track.name}`);
+    },
+  },
+  {
+    text: 'Rename',
+    separator: true,
+    clickHandle() {
+      emit('renameRequest', props.track);
     },
   },
   {

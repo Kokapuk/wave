@@ -68,7 +68,8 @@ onMounted(() => {
   }
 
   if (!fs.existsSync(useSettingsStore().getMusicStoragePath())) {
-    localStorage.clear();
+    useSettingsStore().setMusicStoragePath(useSettingsStore().defaultMusicStoragePath);
+    playerStore.clearTrackList();
     router.go(0);
   }
 
@@ -94,6 +95,7 @@ onMounted(() => {
 
       playerStore.audioVolume += 0.05;
     });
+
     globalShortcut.register('numsub', () => {
       if (Number(playerStore.audioVolume.toFixed(2)) <= 0.05) {
         return;

@@ -50,8 +50,6 @@ async function submitHandle() {
   loading.value = true;
   playerStore.isNavBarDisabled = true;
 
-  // if (path.exist) {
-  // }
   await playerStore.loadTrack(
     { id: '', audio: audio.value, cover: cover.value, name: name.value, artist: artist.value },
     (percentage: number) => {

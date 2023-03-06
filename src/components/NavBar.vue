@@ -11,7 +11,10 @@
       <RouterLink :class="['nav-link', playerStore.isNavBarDisabled && 'disabled']" to="/settings">
         <Gear class="nav-link-icon" /> Settings
       </RouterLink>
-      <RouterLink :class="['nav-link', playerStore.isNavBarDisabled && 'disabled']" to="/add/mp3">
+
+      <div class="separator"></div>
+
+      <RouterLink :class="['nav-link', playerStore.isNavBarDisabled && 'disabled']" to="/add/manual">
         <Plus class="nav-link-icon" /> Add manually
       </RouterLink>
       <RouterLink :class="['nav-link', playerStore.isNavBarDisabled && 'disabled']" to="/add/spotify">
@@ -71,7 +74,7 @@ const appVersion = computed(() => app.getVersion() + (import.meta.env.DEV ? ' DE
 .links {
   display: flex;
   flex-direction: column;
-  gap: 5px;
+  gap: 10px;
 }
 
 .nav-link {

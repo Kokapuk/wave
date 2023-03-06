@@ -94,24 +94,24 @@ export const usePlayerStore = defineStore('player', () => {
       item.cover = path.join(importPath, item.cover);
     });
 
-    usePlayerStore().setTrackList(tracks);
+    setTrackList(tracks);
   }
 
-  async function loadTrack(track: ITrack, progressChange: (percentage: number) => void) {
+  async function loadTrack(trackToLoad: ITrack, progressChange: (percentage: number) => void) {
     const trackId = uid(12);
     const trackPath = path.join(useSettingsStore().getMusicStoragePath(), trackId);
     let downloadSuccesfull = true;
 
-    if (fs.existsSync(track.audio)) {
+    if (fs.existsSync(trackToLoad.audio)) {
       if (!fs.existsSync(trackPath)) {
         fs.mkdirSync(trackPath, { recursive: true });
       }
 
-      fs.copyFileSync(track.audio, path.join(trackPath, 'audio.mp3'));
+      fs.copyFileSync(trackToLoad.audio, path.join(trackPath, 'audio.mp3'));
     } else {
       try {
         let downloader = new Downloader({
-          url: track.audio,
+          url: trackToLoad.audio,
           directory: trackPath,
           onProgress: progressChange,
         });
@@ -126,11 +126,11 @@ export const usePlayerStore = defineStore('player', () => {
       }
     }
 
-    if (fs.existsSync(track.cover)) {
-      fs.copyFileSync(track.cover, path.join(trackPath, 'cover.png'));
+    if (fs.existsSync(trackToLoad.cover)) {
+      fs.copyFileSync(trackToLoad.cover, path.join(trackPath, 'cover.png'));
     } else {
       let downloader = new Downloader({
-        url: track.cover,
+        url: trackToLoad.cover,
         directory: trackPath,
         onProgress: progressChange,
       });
@@ -151,12 +151,25 @@ export const usePlayerStore = defineStore('player', () => {
         id: trackId,
         audio: path.join(trackPath, 'audio.mp3'),
         cover: path.join(trackPath, 'cover.png'),
-        name: track.name,
-        artist: track.artist,
+        name: trackToLoad.name,
+        artist: trackToLoad.artist,
       };
 
-      usePlayerStore().setTrackList([downloadedTrack, ...usePlayerStore().getTrackList()]);
+      setTrackList([downloadedTrack, ...getTrackList()]);
     }
+  }
+
+  function renameTrack(trackToRenameId: string, artist: string, trackName: string) {
+    const newTrackList = getTrackList().map((foundTrack: ITrack) => {
+      if (foundTrack.id === trackToRenameId) {
+        foundTrack.artist = artist;
+        foundTrack.name = trackName;
+      }
+
+      return foundTrack;
+    });
+
+    setTrackList(newTrackList);
   }
 
   return {
@@ -180,5 +193,6 @@ export const usePlayerStore = defineStore('player', () => {
     getNextTrack,
     importTracks,
     loadTrack,
+    renameTrack,
   };
 });

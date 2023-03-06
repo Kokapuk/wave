@@ -1,16 +1,28 @@
 <template>
   <div v-if="tracks.length > 0" class="track-list-container">
-    <Track @delete-request="deleteRequestHandle" v-for="track in tracks" :track="track" />
+    <Track @delete-request="deleteRequestHandle" @rename-request="renameRequestHandle" v-for="track in tracks" :track="track" />
   </div>
   <span v-else class="empty-placeholder-center">You library is empty</span>
-  <Modal @close-request="() => (modalShow = false)" title="Delete track" :show="modalShow">
+  <Modal @close-request="() => (deleteModalShow = false)" title="Delete track" :show="deleteModalShow">
     <span v-if="deleteRequestTrack !== null">
       Are you sure you want to delete <b>{{ deleteRequestTrack!.artist }} - {{ deleteRequestTrack!.name }} </b>?
     </span>
     <div class="separator"></div>
     <div class="modal-button-container">
       <Button @click="() => deleteTrack(deleteRequestTrack!)">Yes</Button>
-      <Button @click="() => (modalShow = false)">No</Button>
+      <Button @click="() => (deleteModalShow = false)">No</Button>
+    </div>
+  </Modal>
+  <Modal @close-request="() => (renameModalShow = false)" title="Rename track" :show="renameModalShow">
+    <span v-if="renameRequestTrack !== null">
+      Renaming <b>{{ renameRequestTrack!.artist }} - {{ renameRequestTrack!.name }} </b>
+    </span>
+    <input v-model="renamingTrackArtist" type="text" class="input modal-input" placeholder="Artis" />
+    <input v-model="renamingTrackName" type="text" class="input modal-input" placeholder="Track name" />
+    <div class="separator"></div>
+    <div class="modal-button-container">
+      <Button @click="() => renameTrack(renameRequestTrack!, renamingTrackArtist, renamingTrackName)">Save</Button>
+      <Button @click="() => (renameModalShow = false)">Cancel</Button>
     </div>
   </Modal>
 </template>
@@ -28,21 +40,43 @@ const playerStore = usePlayerStore();
 playerStore.importTracks(useSettingsStore().getMusicStoragePath());
 const tracks = ref<ITrack[]>(playerStore.getTrackList());
 const deleteRequestTrack = ref<ITrack | null>(null);
-const modalShow = ref(false);
+const renameRequestTrack = ref<ITrack | null>(null);
+const deleteModalShow = ref(false);
+const renameModalShow = ref(false);
+const renamingTrackArtist = ref('');
+const renamingTrackName = ref('');
 
 function deleteRequestHandle(track: ITrack) {
   deleteRequestTrack.value = track;
-  modalShow.value = true;
+  deleteModalShow.value = true;
+}
+
+function renameRequestHandle(track: ITrack) {
+  renameRequestTrack.value = track;
+  renamingTrackArtist.value = track.artist;
+  renamingTrackName.value = track.name;
+  renameModalShow.value = true;
 }
 
 function deleteTrack(track: ITrack) {
-  modalShow.value = false;
+  deleteModalShow.value = false;
 
   if (playerStore.currentTrackId === track.id) {
     playerStore.currentTrackId = null;
   }
 
   playerStore.deleteTrack(track.id);
+  tracks.value = playerStore.getTrackList();
+}
+
+function renameTrack(track: ITrack, artist: string, trackName: string) {
+  renameModalShow.value = false;
+
+  if (playerStore.currentTrackId === track.id) {
+    playerStore.currentTrackId = null;
+  }
+
+  playerStore.renameTrack(track.id, artist, trackName);
   tracks.value = playerStore.getTrackList();
 }
 </script>
@@ -60,5 +94,9 @@ function deleteTrack(track: ITrack) {
   display: flex;
   gap: 10px;
   justify-content: right;
+}
+
+.modal-input {
+  min-width: 350px;
 }
 </style>

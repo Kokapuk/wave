@@ -45,6 +45,8 @@ function chooseClickHandle() {
   } else {
     usePlayerStore().clearTrackList();
   }
+
+  usePlayerStore().currentTrackId = null;
 }
 </script>
 

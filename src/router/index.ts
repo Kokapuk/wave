@@ -18,9 +18,9 @@ const router = createRouter({
       component: () => import('../views/SettingsView.vue'),
     },
     {
-      path: '/add/mp3',
-      name: 'add mp3',
-      meta: { title: 'Add MP3' },
+      path: '/add/manual',
+      name: 'add manually',
+      meta: { title: 'Add manually' },
       component: () => import('../views/AddManuallyView.vue'),
     },
     {

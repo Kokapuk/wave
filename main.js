@@ -1,4 +1,4 @@
-const { app, BrowserWindow, Tray, Menu, nativeImage, globalShortcut } = require('electron');
+const { app, BrowserWindow, Tray, Menu, nativeImage, nativeTheme } = require('electron');
 const path = require('path');
 const isDev = require('electron-is-dev');
 const { autoUpdater } = require('electron-updater');
@@ -46,6 +46,8 @@ function createWindow() {
   } else {
     mainWindow.loadURL('http://localhost:5173/');
   }
+
+  nativeTheme.themeSource = 'dark';
 }
 
 function createTray() {
