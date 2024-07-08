@@ -1,0 +1,49 @@
+@import '@renderer/styles/constants';
+
+$track-height: 5px;
+
+.track {
+  background-color: rgba(255, 255, 255, 0.2);
+  height: $track-height;
+  width: 100%;
+  border-radius: calc($track-height / 2);
+  position: relative;
+
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    height: 15px;
+  }
+}
+
+.fill {
+  height: 100%;
+  background-color: white;
+  border-radius: calc($track-height / 2);
+  position: relative;
+
+  .track:hover &,
+  .track:active & {
+    background-color: $accent;
+  }
+
+  .thumb {
+    position: absolute;
+    right: 0;
+    top: 50%;
+    transform: translateX(50%) translateY(-50%);
+    height: calc($track-height * 2);
+    width: calc($track-height * 2);
+    background-color: white;
+    border-radius: 50%;
+    display: none;
+
+    .track:hover &,
+    .track:active & {
+      display: block;
+    }
+  }
+}
