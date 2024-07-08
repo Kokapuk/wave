@@ -5,10 +5,16 @@ import icon from '../../resources/icon.png?asset';
 
 const createWindow = () => {
   const mainWindow = new BrowserWindow({
-    width: 1200,
+    width: 1280,
     height: 700,
     show: false,
     autoHideMenuBar: true,
+    titleBarStyle: 'hidden',
+    titleBarOverlay: {
+      color: 'rgba(0,0,0,0)',
+      symbolColor: 'white',
+      height: 30,
+    },
     ...(process.platform === 'linux' ? { icon } : {}),
     webPreferences: {
       preload: join(__dirname, '../preload/index.js'),

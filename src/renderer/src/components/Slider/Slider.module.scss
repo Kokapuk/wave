@@ -24,6 +24,7 @@ $track-height: 5px;
   background-color: white;
   border-radius: calc($track-height / 2);
   position: relative;
+  max-width: 100%;
 
   .track:hover &,
   .track:active & {

@@ -1,0 +1,11 @@
+@import '@renderer/styles/constants';
+
+.titleBar {
+  @include blurPanel(bottom);
+  position: fixed;
+  top: 0;
+  right: 0;
+  left: 0;
+  height: $title-bar-height;
+  -webkit-app-region: drag;
+}

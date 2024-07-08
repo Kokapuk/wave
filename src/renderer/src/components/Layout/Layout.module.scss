@@ -1,3 +1,5 @@
+@import '@renderer/styles/constants';
+
 .wrapper {
   display: flex;
   flex-direction: column;
@@ -7,10 +9,5 @@
 .pageContainer {
   height: 100%;
   overflow: auto;
-  padding: 50px 50px 0 50px;
-}
-
-.controls {
-  height: 120px;
-  background-color: purple;
+  padding: calc($title-bar-height + 15px) 50px calc($controls-height + 15px) 50px;
 }

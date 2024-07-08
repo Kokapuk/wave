@@ -1,6 +1,7 @@
 import { ReactNode } from 'react';
-import styles from './Layout.module.scss';
 import Controls from '../Controls';
+import TitleBar from '../TitleBar';
+import styles from './Layout.module.scss';
 
 interface Props {
   children: ReactNode;
@@ -9,6 +10,7 @@ interface Props {
 const Layout = ({ children }: Props) => {
   return (
     <div className={styles.wrapper}>
+      <TitleBar />
       <div className={styles.pageContainer}>{children}</div>
       <Controls />
     </div>

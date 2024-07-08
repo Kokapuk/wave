@@ -1,4 +1,4 @@
-export { default } from './YTPlayer';
+export { default } from './YouTubePlayer';
 
 export const enum PlayerState {
   'Unstarted' = -1,

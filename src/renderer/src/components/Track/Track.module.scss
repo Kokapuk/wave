@@ -1,18 +1,62 @@
+@import '@renderer/styles/constants';
+
 .container {
   display: flex;
   flex-direction: column;
 }
 
-.cover {
+.playButton {
+  width: 250px;
+  height: 250px;
   border-radius: 5px;
-  object-fit: cover;
+  background-color: transparent;
+  overflow: hidden;
+  position: relative;
   margin-bottom: 4px;
+
+  .cover {
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+  }
+
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background-color: black;
+    opacity: 0;
+    @include transition(opacity);
+  }
+
+  &:hover::after {
+    opacity: 0.35;
+  }
+
+  .icon {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translateX(-50%) translateY(-50%);
+    font-size: 50px;
+    scale: 0.9;
+    opacity: 0;
+    z-index: 1;
+    transform-origin: top left;
+    @include transition(scale, opacity);
+  }
+
+  &:hover .icon {
+    scale: 1;
+    opacity: 1;
+  }
 }
 
 .name {
   color: white;
   font-size: 16px;
   font-weight: 700;
+  @include clampLines;
 }
 
 .artist {
@@ -20,4 +64,5 @@
   opacity: 0.5;
   font-size: 16px;
   font-weight: 700;
+  @include clampLines;
 }

@@ -1,16 +1,64 @@
 @import '@renderer/styles/constants';
 
 .container {
+  @include blurPanel(top);
   display: flex;
   align-items: center;
-  height: 70px;
+  height: $controls-height;
+  position: fixed;
+  right: 0;
+  bottom: 0;
+  left: 0;
   padding: 0 16px;
+  gap: 50px;
+
+  > * {
+    z-index: 1;
+  }
+}
+
+.button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 32px;
+  width: 32px;
+  background-color: transparent;
+  font-size: 24px;
+  @include transition(scale, color);
+
+  &:hover {
+    scale: 1.15;
+  }
+
+  &:active {
+    scale: 1;
+  }
 }
 
 .track {
   width: 25%;
-  background-color: green;
-  height: 100%;
+  display: flex;
+  align-items: center;
+  gap: 15px;
+
+  .cover {
+    object-fit: contain;
+    border-radius: 4px;
+    flex-shrink: 0;
+  }
+
+  .name {
+    font-size: 14px;
+    color: white;
+    @include clampLines;
+  }
+
+  .artist {
+    font-size: 12px;
+    color: hsl(from white h s l / 0.75);
+    @include clampLines;
+  }
 }
 
 .playback {
@@ -25,28 +73,40 @@
     gap: 8px;
 
     .button {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      height: 32px;
-      width: 32px;
-      background-color: transparent;
-      font-size: 24px;
-      color: rgba(255, 255, 255, 0.75);
-      @include transition(scale, color);
+      color: hsl(from white h s l / 0.75);
 
       &:hover {
-        scale: 1.15;
         color: white;
-      }
-
-      &:active {
-        scale: 1;
       }
 
       &.play {
         color: white;
         font-size: 32px;
+
+        .loadingSpinner {
+          font-size: 26px;
+        }
+      }
+    }
+  }
+
+  .timeline {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+
+    .time {
+      font-size: 12px;
+      flex-shrink: 0;
+      color: hsl(from white h s l / 0.75);
+      width: 8ch;
+
+      &:first-child {
+        text-align: right;
+      }
+
+      &:last-child {
+        text-align: left;
       }
     }
   }
@@ -54,6 +114,17 @@
 
 .volume {
   width: 25%;
-  background-color: aqua;
-  height: 100%;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  height: fit-content;
+  gap: 8px;
+
+  .button {
+    font-size: 16px;
+  }
+
+  .slider {
+    width: 100px;
+  }
 }
