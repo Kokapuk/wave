@@ -1,13 +1,12 @@
 @import '@renderer/styles/constants';
 
 .wrapper {
-  display: flex;
-  flex-direction: column;
   height: 100vh;
+  overflow: auto;
+  position: relative;
 }
 
 .pageContainer {
-  height: 100%;
-  overflow: auto;
-  padding: calc($title-bar-height + 15px) 50px calc($controls-height + 15px) 50px;
+  padding: 20px 50px;
+  min-height: calc(100% - $title-bar-height - $controls-height);
 }

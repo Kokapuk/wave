@@ -1,5 +1,5 @@
 import usePlayerStore from '@renderer/store/playerStore';
-import { useRef } from 'react';
+import { useEffect, useRef } from 'react';
 import YouTube from 'react-youtube';
 import { PlayerState } from '.';
 import styles from './YouTubePlayer.module.scss';
@@ -12,13 +12,19 @@ const YouTubePlayer = ({ videoId }: Props) => {
   const { setPlayer, setPlayerState, setCurrentTime, setDuration, playNext } = usePlayerStore();
   const currentTimeCheckInterval = useRef<number | null>(null);
 
+  useEffect(() => {
+    return () => {
+      currentTimeCheckInterval.current !== null && clearInterval(currentTimeCheckInterval.current);
+    };
+  }, []);
+
   const handleReady = (event) => {
     currentTimeCheckInterval.current && clearInterval(currentTimeCheckInterval.current);
 
     setPlayer({
       play: () => event.target.playVideo(),
       pause: () => event.target.pauseVideo(),
-      seekTo: (time) => event.target.seekTo(time),
+      seekTo: (seconds) => event.target.seekTo(seconds),
       setVolume: (volume) => event.target.setVolume(volume),
       mute: () => event.target.mute(),
       unmute: () => event.target.unMute(),

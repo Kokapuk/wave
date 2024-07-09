@@ -8,22 +8,22 @@ const TrackGrid = () => {
   return (
     <ul className={styles.grid}>
       {tracks.map((i) => (
-        <li key={i.videoId}>
+        <li key={i.id}>
           <Track track={i} />
         </li>
       ))}
       {tracks.map((i) => (
-        <li key={i.videoId}>
+        <li key={i.id}>
           <Track track={i} />
         </li>
       ))}
       {tracks.map((i) => (
-        <li key={i.videoId}>
+        <li key={i.id}>
           <Track track={i} />
         </li>
       ))}
       {tracks.map((i) => (
-        <li key={i.videoId}>
+        <li key={i.id}>
           <Track track={i} />
         </li>
       ))}
