@@ -2,16 +2,16 @@ import Backward from '@renderer/icons/Backward';
 import Forward from '@renderer/icons/Forward';
 import Pause from '@renderer/icons/Pause';
 import Play from '@renderer/icons/Play';
+import Speaker from '@renderer/icons/Speaker';
+import SpeakerMuted from '@renderer/icons/SpeakerMuted';
 import usePlayerStore from '@renderer/store/playerStore';
 import cn from 'classnames';
 import dayjs from 'dayjs';
 import duration from 'dayjs/plugin/duration';
-import { useEffect, useState } from 'react';
-import styles from './Controls.module.scss';
-import Slider from '../Slider';
+import { useEffect, useMemo, useState } from 'react';
 import LoadingSpinner from '../LoadingSpinner';
-import Speaker from '@renderer/icons/Speaker';
-import SpeakerMuted from '@renderer/icons/SpeakerMuted';
+import Slider from '../Slider';
+import styles from './Controls.module.scss';
 
 dayjs.extend(duration);
 
@@ -27,13 +27,15 @@ const Controls = () => {
     setVolume,
     playPrevious,
     playNext,
-    isMuted,
-    setMuted,
     currentTrackIndex,
     tracks,
   } = usePlayerStore();
   const [isSeeking, setSeeking] = useState(false);
   const [seekingTimeValue, setSeekingTimeValue] = useState(0);
+  const currentTrack = useMemo(
+    () => (currentTrackIndex === null ? null : tracks[currentTrackIndex]),
+    [tracks, currentTrackIndex]
+  );
 
   useEffect(() => {
     const handleMouseUp = () => {
@@ -55,36 +57,22 @@ const Controls = () => {
       return;
     }
 
-    player.setVolume(volume);
+    player.setVolume(volume * (volume / 100));
   }, [player, volume]);
-
-  useEffect(() => {
-    if (!player) {
-      return;
-    }
-
-    isMuted ? player.mute() : player.unmute();
-  }, [player, isMuted]);
-
-  const handleVolumeChange = (volume: number) => {
-    setVolume(volume);
-    setMuted(false);
-  };
 
   return (
     <div className={styles.container}>
       <div className={styles.track}>
-        {currentTrackIndex !== null && (
+        {currentTrack && (
           <>
-            <img
-              className={styles.cover}
-              src={tracks[currentTrackIndex].cover}
-              width={56}
-              height={56}
-            />
+            <img className={styles.cover} src={currentTrack.cover} width={56} height={56} />
             <div>
-              <p className={styles.name}>{tracks[currentTrackIndex].name}</p>
-              <p className={styles.artist}>{tracks[currentTrackIndex].artist}</p>
+              <p title={currentTrack.name} className={styles.name}>
+                {currentTrack.name}
+              </p>
+              <p title={currentTrack.artist} className={styles.artist}>
+                {currentTrack.artist}
+              </p>
             </div>
           </>
         )}
@@ -128,17 +116,8 @@ const Controls = () => {
       </div>
 
       <div className={styles.volume}>
-        <button onClick={() => setMuted(!isMuted)} className={styles.button}>
-          {isMuted ? <SpeakerMuted /> : <Speaker />}
-        </button>
-        <Slider
-          className={styles.slider}
-          min={0}
-          max={100}
-          step={1}
-          value={isMuted ? 0 : volume}
-          onChange={handleVolumeChange}
-        />
+        {volume > 0 ? <Speaker className={styles.icon} /> : <SpeakerMuted className={styles.icon} />}
+        <Slider className={styles.slider} min={0} max={100} step={1} value={volume} onChange={setVolume} />
       </div>
     </div>
   );

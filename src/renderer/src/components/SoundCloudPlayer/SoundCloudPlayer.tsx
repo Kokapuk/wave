@@ -21,7 +21,7 @@ const SoundCloudPlayer = ({ trackId }: Props) => {
     .map(([key, value]) => `${key}=${value}`)
     .join('&');
   const frame = useRef<HTMLIFrameElement>(null);
-  const { setPlayer, setPlayerState, setCurrentTime, setDuration, playNext, setVolume } = usePlayerStore();
+  const { setPlayer, setPlayerState, setCurrentTime, setDuration, playNext } = usePlayerStore();
 
   useEffect(() => {
     const handleReady = (widget: any) => {
@@ -30,8 +30,6 @@ const SoundCloudPlayer = ({ trackId }: Props) => {
         pause: () => widget.pause(),
         seekTo: (seconds) => widget.seekTo(seconds * 1000),
         setVolume: (volume) => widget.setVolume(volume),
-        mute: () => setVolume(0),
-        unmute: () => setVolume(20),
       });
 
       widget.getDuration((milliseconds) => setDuration(milliseconds / 1000));

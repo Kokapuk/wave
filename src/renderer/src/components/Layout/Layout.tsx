@@ -1,19 +1,33 @@
-import { ReactNode } from 'react';
+import usePlayerStore from '@renderer/store/playerStore';
+import { Suspense } from 'react';
+import { Outlet } from 'react-router-dom';
 import Controls from '../Controls';
+import SoundCloudPlayer from '../SoundCloudPlayer';
 import TitleBar from '../TitleBar';
+import YouTubePlayer from '../YouTubePlayer';
 import styles from './Layout.module.scss';
 
-interface Props {
-  children: ReactNode;
-}
+const Layout = () => {
+  const { tracks, currentTrackIndex } = usePlayerStore();
 
-const Layout = ({ children }: Props) => {
   return (
-    <div className={styles.wrapper}>
-      <TitleBar />
-      <div className={styles.pageContainer}>{children}</div>
-      <Controls />
-    </div>
+    <>
+      <div className={styles.wrapper}>
+        <TitleBar />
+        <div className={styles.pageContainer}>
+          <Suspense>
+            <Outlet />
+          </Suspense>
+        </div>
+        <Controls />
+      </div>
+      {currentTrackIndex !== null && tracks[currentTrackIndex].source === 'youtube' && (
+        <YouTubePlayer videoId={tracks[currentTrackIndex].id} />
+      )}
+      {currentTrackIndex !== null && tracks[currentTrackIndex].source === 'soundCloud' && (
+        <SoundCloudPlayer trackId={tracks[currentTrackIndex].id} />
+      )}
+    </>
   );
 };
 

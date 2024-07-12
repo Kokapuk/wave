@@ -1,0 +1,11 @@
+@import '@renderer/styles/constants';
+
+.container {
+  display: flex;
+  flex-direction: column-reverse;
+  gap: 15px;
+  position: fixed;
+  left: 30px;
+  bottom: 20px;
+  z-index: 5;
+}

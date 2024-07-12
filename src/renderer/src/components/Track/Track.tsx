@@ -1,3 +1,4 @@
+import Pause from '@renderer/icons/Pause';
 import Play from '@renderer/icons/Play';
 import usePlayerStore from '@renderer/store/playerStore';
 import { Track as TrackType } from '@renderer/utils/types';
@@ -10,7 +11,7 @@ interface Props {
 }
 
 const Track = ({ track }: Props) => {
-  const { tracks, setCurrentTrackIndex, currentTrackIndex } = usePlayerStore();
+  const { tracks, setCurrentTrackIndex, currentTrackIndex, player, playerState } = usePlayerStore();
 
   const isPlaying = useMemo(() => {
     if (currentTrackIndex === null) {
@@ -21,6 +22,11 @@ const Track = ({ track }: Props) => {
   }, [currentTrackIndex, tracks]);
 
   const handleClick = () => {
+    if (tracks[currentTrackIndex ?? -1]?.id === track.id) {
+      ({ playing: player?.pause, paused: player?.play })[playerState]?.();
+      return;
+    }
+
     const trackIndex = tracks.findIndex((i) => track.id === i.id);
 
     if (trackIndex < 0) {
@@ -31,14 +37,22 @@ const Track = ({ track }: Props) => {
   };
 
   return (
-    <div>
+    <div className={styles.container}>
       <button onClick={handleClick} className={styles.playButton}>
         <img className={styles.cover} src={track.cover} alt={track.name} />
-        <Play className={styles.icon} />
+        {tracks[currentTrackIndex ?? -1]?.id !== track.id || playerState === 'paused' ? (
+          <Play className={styles.icon} />
+        ) : (
+          <Pause className={styles.icon} />
+        )}
       </button>
       <div className={cn(styles.details, isPlaying && styles.playing)}>
-        <p className={styles.name}>{track.name}</p>
-        <p className={styles.artist}>{track.artist}</p>
+        <p className={styles.name} title={track.name}>
+          {track.name}
+        </p>
+        <p className={styles.artist} title={track.artist}>
+          {track.artist}
+        </p>
       </div>
     </div>
   );

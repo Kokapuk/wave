@@ -4,8 +4,8 @@ import { electronApp, optimizer, is } from '@electron-toolkit/utils';
 import icon from '../../resources/icon.png?asset';
 
 const createWindow = () => {
-  const mainWindow = new BrowserWindow({
-    width: 1200,
+  const window = new BrowserWindow({
+    width: 1110,
     height: 700,
     minWidth: 800,
     minHeight: 600,
@@ -15,28 +15,34 @@ const createWindow = () => {
     titleBarOverlay: {
       color: 'rgba(0,0,0,0)',
       symbolColor: 'white',
-      height: 30,
+      height: 34,
     },
     ...(process.platform === 'linux' ? { icon } : {}),
     webPreferences: {
       preload: join(__dirname, '../preload/index.js'),
       sandbox: false,
+      webviewTag: true,
+      contextIsolation: false,
     },
   });
 
-  mainWindow.on('ready-to-show', () => {
-    mainWindow.show();
+  window.on('ready-to-show', () => {
+    window.show();
   });
 
-  mainWindow.webContents.setWindowOpenHandler((details) => {
+  window.webContents.setWindowOpenHandler((details) => {
     shell.openExternal(details.url);
     return { action: 'deny' };
   });
 
+  window.webContents.on('will-attach-webview', (_, webPreferences) => {
+    webPreferences.preload = join(__dirname, '../preload/youtube.js');
+  });
+
   if (is.dev && process.env['ELECTRON_RENDERER_URL']) {
-    mainWindow.loadURL(process.env['ELECTRON_RENDERER_URL']);
+    window.loadURL(process.env['ELECTRON_RENDERER_URL']);
   } else {
-    mainWindow.loadFile(join(__dirname, '../renderer/index.html'));
+    window.loadFile(join(__dirname, '../renderer/index.html'));
   }
 };
 
@@ -60,4 +66,15 @@ app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') {
     app.quit();
   }
+});
+
+app.on('web-contents-created', (_, webContents) => {
+  if (webContents.getType() !== 'webview') {
+    return;
+  }
+
+  webContents.setWindowOpenHandler(({ url }) => {
+    shell.openExternal(url);
+    return { action: 'deny' };
+  });
 });

@@ -7,6 +7,7 @@
 }
 
 .pageContainer {
+  position: relative;
   padding: 20px 50px;
   min-height: calc(100% - $title-bar-height - $controls-height);
 }

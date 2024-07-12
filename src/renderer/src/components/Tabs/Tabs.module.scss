@@ -1,0 +1,31 @@
+@import '@renderer/styles/constants';
+
+.container {
+  -webkit-app-region: no-drag;
+  width: fit-content;
+  height: 100%;
+}
+
+.tabs {
+  display: flex;
+  list-style: none;
+  height: 100%;
+}
+
+.tab {
+  height: 100%;
+  width: 48px;
+  display: grid;
+  place-items: center;
+  color: white;
+  font-size: 18px;
+  @include transition(background-color, color);
+
+  &.active {
+    color: $accent;
+  }
+
+  &:hover {
+    background-color: hsl(from white h s l / 0.15);
+  }
+}

@@ -7,3 +7,8 @@ export interface Track {
   artist: string;
   cover: string;
 }
+
+export interface Toast {
+  message: string;
+  duration: number;
+}

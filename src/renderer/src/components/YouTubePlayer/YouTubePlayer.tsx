@@ -26,8 +26,6 @@ const YouTubePlayer = ({ videoId }: Props) => {
       pause: () => event.target.pauseVideo(),
       seekTo: (seconds) => event.target.seekTo(seconds),
       setVolume: (volume) => event.target.setVolume(volume),
-      mute: () => event.target.mute(),
-      unmute: () => event.target.unMute(),
     });
 
     setDuration(event.target.getDuration());
