@@ -12,6 +12,8 @@ import { useEffect, useMemo, useState } from 'react';
 import LoadingSpinner from '../LoadingSpinner';
 import Slider from '../Slider';
 import styles from './Controls.module.scss';
+import RewindForward from '@renderer/icons/RewindForward';
+import RewindBackward from '@renderer/icons/RewindBackward';
 
 dayjs.extend(duration);
 
@@ -80,6 +82,13 @@ const Controls = () => {
 
       <div className={styles.playback}>
         <div className={styles.buttons}>
+          <button
+            onClick={() => player?.seekTo(currentTime - 5)}
+            disabled={!player}
+            className={cn(styles.button, styles.rewind)}
+          >
+            <RewindBackward />
+          </button>
           <button disabled={!player} onClick={playPrevious} className={styles.button}>
             <Backward />
           </button>
@@ -95,6 +104,13 @@ const Controls = () => {
 
           <button disabled={!player} onClick={playNext} className={styles.button}>
             <Forward />
+          </button>
+          <button
+            onClick={() => player?.seekTo(currentTime + 5)}
+            disabled={!player}
+            className={cn(styles.button, styles.rewind)}
+          >
+            <RewindForward />
           </button>
         </div>
 

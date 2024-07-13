@@ -1,0 +1,39 @@
+@import '@renderer/styles/constants';
+
+.backdrop {
+  position: fixed;
+  inset: 0;
+  top: $title-bar-height;
+  bottom: $controls-height;
+  background-color: hsl(from black h s l / 0.65);
+  display: grid;
+  place-items: center;
+  z-index: 5;
+}
+
+.modal {
+  @include blurPanel(top, right, bottom, left);
+  border-radius: 7px;
+  overflow: hidden;
+  position: relative;
+}
+
+.closeButton {
+  display: grid;
+  place-items: center;
+  height: 22px;
+  width: 22px;
+  font-size: 16px;
+  background-color: transparent;
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  color: white;
+  opacity: 0.65;
+  background-color: $black;
+  border-radius: 50%;
+
+  &:hover {
+    opacity: 1;
+  }
+}

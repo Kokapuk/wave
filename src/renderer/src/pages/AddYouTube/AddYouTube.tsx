@@ -1,12 +1,15 @@
+import AddTrackModal from '@renderer/components/AddTrackModal';
 import usePlayerStore from '@renderer/store/playerStore';
 import useToastsStore from '@renderer/store/toastsStore';
+import { Track } from '@renderer/utils/types';
 import { WebviewTag } from 'electron';
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import styles from './AddYouTube.module.scss';
 
 const AddYouTube = () => {
   const webview = useRef<WebviewTag>(null);
   const { addToast } = useToastsStore();
+  const [addingTrack, setAddingTrack] = useState<{ open: boolean; track: Track | null }>({ open: false, track: null });
 
   useEffect(() => {
     if (!webview.current) {
@@ -25,15 +28,16 @@ const AddYouTube = () => {
         return;
       }
 
-      usePlayerStore.getState().addTrack({
-        source: 'youtube',
-        id: videoId,
-        name: event.args[1],
-        artist: event.args[2],
-        cover: event.args[3],
+      setAddingTrack({
+        open: true,
+        track: {
+          source: 'youtube',
+          id: videoId,
+          name: event.args[1],
+          artist: event.args[2],
+          cover: event.args[3],
+        },
       });
-
-      addToast({ message: `${event.args[1]} has been added to your playlist!`, duration: 5000 });
     };
 
     webview.current.addEventListener('ipc-message', handleIpcMessage);
@@ -46,12 +50,22 @@ const AddYouTube = () => {
   }, []);
 
   return (
-    <webview
-      ref={webview}
-      webpreferences="contextIsolation=false"
-      className={styles.webview}
-      src="https://www.youtube.com/results?search_query="
-    />
+    <>
+      <webview
+        ref={webview}
+        webpreferences="contextIsolation=false"
+        className={styles.webview}
+        src="https://www.youtube.com/results?search_query="
+      />
+      {addingTrack.track && (
+        <AddTrackModal
+          key={addingTrack.track.id}
+          track={addingTrack.track}
+          open={addingTrack.open}
+          onClose={() => setAddingTrack((prev) => ({ ...prev, open: false }))}
+        />
+      )}
+    </>
   );
 };
 

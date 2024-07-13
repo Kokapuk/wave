@@ -41,7 +41,7 @@
 
   .cover {
     object-fit: cover;
-    border-radius: 4px;
+    border-radius: 5px;
     flex-shrink: 0;
   }
 
@@ -83,6 +83,10 @@
         .loadingSpinner {
           font-size: 26px;
         }
+      }
+
+      &.rewind {
+        font-size: 20px;
       }
     }
   }
