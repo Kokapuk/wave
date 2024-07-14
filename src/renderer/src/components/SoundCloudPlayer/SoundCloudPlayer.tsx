@@ -28,7 +28,10 @@ const SoundCloudPlayer = ({ trackId }: Props) => {
       setPlayer({
         play: () => widget.play(),
         pause: () => widget.pause(),
-        seekTo: (seconds) => widget.seekTo(seconds * 1000),
+        seekTo: (seconds) => {
+          widget.seekTo(seconds * 1000);
+          setCurrentTime(seconds);
+        },
         setVolume: (volume) => widget.setVolume(volume),
       });
 

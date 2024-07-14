@@ -24,7 +24,10 @@ const YouTubePlayer = ({ videoId }: Props) => {
     setPlayer({
       play: () => event.target.playVideo(),
       pause: () => event.target.pauseVideo(),
-      seekTo: (seconds) => event.target.seekTo(seconds),
+      seekTo: (seconds) => {
+        event.target.seekTo(seconds);
+        setCurrentTime(seconds);
+      },
       setVolume: (volume) => event.target.setVolume(volume),
     });
 
@@ -32,7 +35,7 @@ const YouTubePlayer = ({ videoId }: Props) => {
 
     currentTimeCheckInterval.current = setInterval(() => {
       setCurrentTime(event.target.getCurrentTime());
-    }, 100) as unknown as number;
+    }, 250) as unknown as number;
   };
 
   const handleStateChange = (event) => {

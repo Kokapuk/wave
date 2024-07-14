@@ -2,6 +2,8 @@ import Backward from '@renderer/icons/Backward';
 import Forward from '@renderer/icons/Forward';
 import Pause from '@renderer/icons/Pause';
 import Play from '@renderer/icons/Play';
+import RewindBackward from '@renderer/icons/RewindBackward';
+import RewindForward from '@renderer/icons/RewindForward';
 import Speaker from '@renderer/icons/Speaker';
 import SpeakerMuted from '@renderer/icons/SpeakerMuted';
 import usePlayerStore from '@renderer/store/playerStore';
@@ -12,8 +14,6 @@ import { useEffect, useMemo, useState } from 'react';
 import LoadingSpinner from '../LoadingSpinner';
 import Slider from '../Slider';
 import styles from './Controls.module.scss';
-import RewindForward from '@renderer/icons/RewindForward';
-import RewindBackward from '@renderer/icons/RewindBackward';
 
 dayjs.extend(duration);
 
@@ -46,7 +46,7 @@ const Controls = () => {
       }
 
       player.seekTo(seekingTimeValue);
-      setTimeout(() => setSeeking(false), 100);
+      setSeeking(false);
     };
 
     document.addEventListener('mouseup', handleMouseUp);

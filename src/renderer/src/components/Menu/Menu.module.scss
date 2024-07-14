@@ -1,0 +1,57 @@
+@import '@renderer/styles/constants';
+
+.menu {
+  @include blurPanel(top, right, bottom, left);
+  position: fixed;
+  z-index: 5;
+  border-radius: 7px;
+  overflow: hidden;
+
+  &.right {
+    transform: translateX(-100%);
+  }
+
+  &.bottom {
+    transform: translateY(-100%);
+  }
+
+  &.right.bottom {
+    transform: translateX(-100%) translateY(-100%);
+  }
+}
+
+.items {
+  display: flex;
+  flex-direction: column;
+  padding: 5px;
+  gap: 5px;
+
+  .item {
+    width: 100%;
+    justify-content: flex-start;
+    gap: 10px;
+    font-size: 16px;
+    background-color: transparent;
+    padding: 5px 15px 5px 10px;
+    border-radius: 4px;
+    white-space: nowrap;
+    @include transition(background-color, scale);
+
+    &:hover {
+      background-color: hsl(from white h s l / 0.15);
+    }
+
+    &:active {
+      scale: 0.95;
+    }
+
+    .iconContainer {
+      display: flex;
+      height: 18px;
+      width: 18px;
+      font-size: 18px;
+      flex-shrink: 0;
+      color: hsl(from white h s l / 0.85);
+    }
+  }
+}

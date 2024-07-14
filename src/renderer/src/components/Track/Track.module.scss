@@ -4,51 +4,64 @@
   width: 225px;
 }
 
-.playButton {
-  width: 100%;
-  height: auto;
-  aspect-ratio:  1/1;
-  border-radius: 5px;
-  background-color: transparent;
-  overflow: hidden;
+.coverContainer {
   position: relative;
+  width: 100%;
+  aspect-ratio: 1/1;
+  border-radius: 5px;
+  overflow: hidden;
   margin-bottom: 4px;
 
   .cover {
-    height: 100%;
     width: 100%;
+    height: 100%;
     object-fit: cover;
   }
 
-  &::after {
-    content: '';
+  .playButton {
     position: absolute;
     inset: 0;
-    background-color: black;
-    opacity: 0;
-    @include transition(opacity);
+    background-color: transparent;
+    @include transition(background-color);
+
+    .icon {
+      font-size: 48px;
+      scale: 0.85;
+      opacity: 0;
+      @include transition(scale, opacity);
+    }
   }
 
-  &:hover::after {
-    opacity: 0.35;
+  &.coverContainer:hover .playButton {
+    background-color: hsl(from black h s l / 0.5);
+
+    .icon {
+      scale: 1;
+      opacity: 1;
+    }
   }
 
-  .icon {
+  .moreButton {
     position: absolute;
-    left: 50%;
-    top: 50%;
-    transform: translateX(-50%) translateY(-50%);
-    font-size: 50px;
-    scale: 0.9;
+    top: 0;
+    right: 5px;
+    font-size: 28px;
+    display: grid;
+    place-items: center;
+    aspect-ratio: 1/1;
+    background-color: transparent;
     opacity: 0;
-    z-index: 1;
-    transform-origin: top left;
-    @include transition(scale, opacity);
+    transform: translateY(-4px);
+    @include transition(opacity, transform, scale);
+
+    &:hover:not(:active) {
+      scale: 1.15;
+    }
   }
 
-  &:hover .icon {
-    scale: 1;
+  &:hover .moreButton {
     opacity: 1;
+    transform: translateY(0);
   }
 }
 

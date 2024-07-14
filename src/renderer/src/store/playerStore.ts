@@ -36,7 +36,16 @@ const usePlayerStore = create<PlayerStore>()(
     (set, get) => ({
       tracks: [],
       addTrack: (track) => set({ tracks: [...get().tracks, track] }),
-      removeTrack: (trackId: string) => set({ tracks: get().tracks.filter((i) => i.id !== trackId) }),
+      removeTrack: (trackId: string) => {
+        set({
+          tracks: get().tracks.filter((i) => i.id !== trackId),
+          player: null,
+          currentTime: 0,
+          currentTrackIndex: null,
+          duration: 0,
+          playerState: 'paused',
+        });
+      },
       currentTrackIndex: null,
       setCurrentTrackIndex: (index) => set({ currentTrackIndex: index, player: null }),
       playPrevious: () => {
@@ -85,6 +94,7 @@ const usePlayerStore = create<PlayerStore>()(
       storage: createJSONStorage(() => localStorage),
       partialize: (state) => ({
         tracks: state.tracks,
+        volume: state.volume,
       }),
     }
   )

@@ -26,7 +26,7 @@ const Slider = ({
   min = 0,
   max = 100,
   step = 1,
-  value: controlledValue,
+  value,
   onChange,
   disabled,
   fillClass,
@@ -36,8 +36,8 @@ const Slider = ({
   const isSliding = useRef(false);
   const track = useRef<HTMLDivElement>(null);
   const [uncontrolledValue, setUncontrolledValue] = useState(min);
-  const value = useMemo(() => controlledValue ?? uncontrolledValue, [controlledValue, uncontrolledValue]);
-  const setValue = useMemo(() => onChange ?? setUncontrolledValue, [onChange, setUncontrolledValue]);
+  const controlledValue = useMemo(() => value ?? uncontrolledValue, [value, uncontrolledValue]);
+  const setControlledValue = useMemo(() => onChange ?? setUncontrolledValue, [onChange, setUncontrolledValue]);
 
   const getProgressByMouseX = (mouseX: number) => {
     if (!track.current) {
@@ -58,7 +58,7 @@ const Slider = ({
         return;
       }
 
-      setValue(getProgressByMouseX(event.clientX) ?? min);
+      setControlledValue(getProgressByMouseX(event.clientX) ?? min);
     };
 
     const handleMouseUp = () => {
@@ -84,7 +84,7 @@ const Slider = ({
     event.preventDefault();
     event.currentTarget.focus();
 
-    setValue(getProgressByMouseX(event.clientX) ?? min);
+    setControlledValue(getProgressByMouseX(event.clientX) ?? min);
     isSliding.current = true;
   };
 
@@ -93,10 +93,10 @@ const Slider = ({
 
     switch (event.key) {
       case 'ArrowLeft':
-        setValue(Math.max(Math.min(value - step, max), min));
+        setControlledValue(Math.max(Math.min(controlledValue - step, max), min));
         break;
       case 'ArrowRight':
-        setValue(Math.max(Math.min(value + step, max), min));
+        setControlledValue(Math.max(Math.min(controlledValue + step, max), min));
         break;
     }
   };
@@ -111,7 +111,7 @@ const Slider = ({
       className={cn(styles.track, props.className)}
       aria-disabled={disabled}
     >
-      <div style={{ width: `${((value - min) / (max - min)) * 100}%` }} className={cn(styles.fill, fillClass)}>
+      <div style={{ width: `${((controlledValue - min) / (max - min)) * 100 || 0}%` }} className={cn(styles.fill, fillClass)}>
         <div className={cn(styles.thumb, thumbClass)} />
       </div>
     </div>

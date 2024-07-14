@@ -17,12 +17,8 @@ const AddTrackModal = ({ track, open, onClose }: Props) => {
   const addTrack = usePlayerStore((st) => st.addTrack);
   const addToast = useToastsStore((st) => st.addToast);
 
-  const handleInputFocus = (event: React.FocusEvent<HTMLInputElement>) => {
-    event.currentTarget.select();
-  };
-
   const addToPlaylist = () => {
-    addTrack({ ...track, name, artist });
+    addTrack({ ...track, name: name.trim(), artist: artist.trim() });
     addToast({ message: `${name} has been added to your playlist!`, duration: 5000 });
     onClose();
   };
@@ -37,7 +33,6 @@ const AddTrackModal = ({ track, open, onClose }: Props) => {
             className={styles.input}
             value={name}
             onChange={(e) => setName(e.currentTarget.value)}
-            onFocus={handleInputFocus}
           />
         </div>
         <div className={styles.inputContainer}>
@@ -46,7 +41,6 @@ const AddTrackModal = ({ track, open, onClose }: Props) => {
             className={styles.input}
             value={artist}
             onChange={(e) => setArtist(e.currentTarget.value)}
-            onFocus={handleInputFocus}
           />
         </div>
         <button onClick={addToPlaylist} className={styles.button}>

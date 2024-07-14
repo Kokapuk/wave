@@ -30,10 +30,7 @@ const createWindow = () => {
     window.show();
   });
 
-  window.webContents.setWindowOpenHandler((details) => {
-    shell.openExternal(details.url);
-    return { action: 'deny' };
-  });
+  window.webContents.setWindowOpenHandler(() => ({ action: 'deny' }));
 
   window.webContents.on('will-attach-webview', (_, webPreferences) => {
     webPreferences.preload = join(__dirname, '../preload/youtube.js');
