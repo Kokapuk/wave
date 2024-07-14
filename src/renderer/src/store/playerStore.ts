@@ -15,6 +15,7 @@ interface PlayerStore {
   tracks: Track[];
   addTrack(track: Track): void;
   removeTrack(trackId: string): void;
+  editTrack(trackId: string, editData: Partial<Pick<Track, 'name' | 'artist'>>);
   currentTrackIndex: number | null;
   setCurrentTrackIndex(index: number | null): void;
   playPrevious(): void;
@@ -46,12 +47,31 @@ const usePlayerStore = create<PlayerStore>()(
           playerState: 'paused',
         });
       },
+      editTrack: (trackId, editData) => {
+        const tracks: Track[] = JSON.parse(JSON.stringify(get().tracks));
+        const editingTrack = tracks.find((i) => i.id === trackId);
+
+        if (!editingTrack) {
+          return;
+        }
+
+        editingTrack.name = editData.name ?? editingTrack.name;
+        editingTrack.artist = editData.artist ?? editingTrack.artist;
+
+        set({ tracks });
+      },
       currentTrackIndex: null,
       setCurrentTrackIndex: (index) => set({ currentTrackIndex: index, player: null }),
       playPrevious: () => {
         const state = get();
 
-        if (!state.tracks.length || state.currentTrackIndex === null) {
+        if (state.currentTrackIndex === null) {
+          return;
+        }
+
+        if (state.tracks.length < 2) {
+          state.player?.seekTo(0);
+          state.player?.play();
           return;
         }
 
@@ -66,7 +86,13 @@ const usePlayerStore = create<PlayerStore>()(
       playNext: () => {
         const state = get();
 
-        if (!state.tracks.length || state.currentTrackIndex === null) {
+        if (state.currentTrackIndex === null) {
+          return;
+        }
+
+        if (state.tracks.length < 2) {
+          state.player?.seekTo(0);
+          state.player?.play();
           return;
         }
 

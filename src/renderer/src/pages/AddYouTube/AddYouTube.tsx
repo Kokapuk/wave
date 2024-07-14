@@ -1,4 +1,4 @@
-import AddTrackModal from '@renderer/components/AddTrackModal';
+import TrackModal from '@renderer/components/TrackModal';
 import usePlayerStore from '@renderer/store/playerStore';
 import useToastsStore from '@renderer/store/toastsStore';
 import { Track } from '@renderer/utils/types';
@@ -8,8 +8,9 @@ import styles from './AddYouTube.module.scss';
 
 const AddYouTube = () => {
   const webview = useRef<WebviewTag>(null);
-  const { addToast } = useToastsStore();
   const [addingTrack, setAddingTrack] = useState<{ open: boolean; track: Track | null }>({ open: false, track: null });
+  const addTrack = usePlayerStore((st) => st.addTrack);
+  const addToast = useToastsStore((st) => st.addToast);
 
   useEffect(() => {
     if (!webview.current) {
@@ -49,6 +50,11 @@ const AddYouTube = () => {
     };
   }, []);
 
+  const handleSubmit = (track: Track) => {
+    addTrack(track);
+    addToast({ message: `${track.name} was added to your playlist!`, duration: 5000 });
+  }
+
   return (
     <>
       <webview
@@ -58,11 +64,12 @@ const AddYouTube = () => {
         src="https://www.youtube.com/results?search_query="
       />
       {addingTrack.track && (
-        <AddTrackModal
-          key={addingTrack.track.id}
+        <TrackModal
           track={addingTrack.track}
           open={addingTrack.open}
           onClose={() => setAddingTrack((prev) => ({ ...prev, open: false }))}
+          onSubmit={handleSubmit}
+          buttonLabel="Add to Playlist"
         />
       )}
     </>

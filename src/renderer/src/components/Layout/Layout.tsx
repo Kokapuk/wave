@@ -21,6 +21,7 @@ const Layout = () => {
         </div>
         <Controls />
       </div>
+      
       {currentTrackIndex !== null && tracks[currentTrackIndex].source === 'youtube' && (
         <YouTubePlayer videoId={tracks[currentTrackIndex].id} />
       )}
