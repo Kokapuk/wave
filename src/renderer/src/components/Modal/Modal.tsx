@@ -1,8 +1,9 @@
-import { createPortal } from 'react-dom';
-import styles from './Modal.module.scss';
 import Close from '@renderer/icons/Close';
-import { ReactNode } from 'react';
 import cn from 'classnames';
+import { ReactNode } from 'react';
+import { createPortal } from 'react-dom';
+import Transition from '../Transition';
+import styles from './Modal.module.scss';
 
 interface Props {
   open: boolean;
@@ -12,21 +13,21 @@ interface Props {
 }
 
 const Modal = ({ open, onClose, children, className }: Props) => {
-  if (!open) {
-    return null;
-  }
-
   return createPortal(
-    <div className={styles.backdrop} onMouseDown={onClose}>
-      <div className={cn(styles.modal, className)} onMouseDown={(e) => e.stopPropagation()}>
-        {onClose && (
-          <button onClick={onClose} className={styles.closeButton}>
-            <Close />
-          </button>
-        )}
-        {children}
+    <Transition display={open} classes={{ enter: styles.enter, exit: styles.exit }}>
+      <div className={styles.backdrop} onMouseDown={onClose}>
+        <Transition display={open} classes={{ enter: styles.enter, exit: styles.exit }}>
+          <div className={cn(styles.modal, className)} onMouseDown={(e) => e.stopPropagation()}>
+            {onClose && (
+              <button onClick={onClose} className={styles.closeButton}>
+                <Close />
+              </button>
+            )}
+            {children}
+          </div>
+        </Transition>
       </div>
-    </div>,
+    </Transition>,
     document.getElementById('modalRoot') as HTMLElement
   );
 };

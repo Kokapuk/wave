@@ -6,17 +6,32 @@
   z-index: 5;
   border-radius: 7px;
   overflow: hidden;
+  @include transition(opacity, scale);
+  transform-origin: top center;
 
   &.right {
-    transform: translateX(-100%);
+    // transform: translateX(-100%);
+    translate: -100% 0;
   }
 
   &.bottom {
-    transform: translateY(-100%);
+    // transform: translateY(-100%);
+    translate: 0 -100%;
   }
 
   &.right.bottom {
-    transform: translateX(-100%) translateY(-100%);
+    // transform: translateX(-100%) translateY(-100%);
+    translate: -100% -100%;
+  }
+
+  &.enter {
+    opacity: 1;
+    scale: 1 1;
+  }
+
+  &.exit {
+    opacity: 0;
+    scale: 1 0.95;
   }
 }
 

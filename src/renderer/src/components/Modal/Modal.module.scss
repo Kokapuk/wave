@@ -9,6 +9,15 @@
   display: grid;
   place-items: center;
   z-index: 5;
+  @include transition(opacity);
+
+  &.enter {
+    opacity: 1;
+  }
+
+  &.exit {
+    opacity: 0;
+  }
 }
 
 .modal {
@@ -16,6 +25,15 @@
   border-radius: 7px;
   overflow: hidden;
   position: relative;
+  @include transition(scale);
+
+  &.enter {
+    scale: 1;
+  }
+  
+  &.exit {
+    scale: 0.95;
+  }
 }
 
 .closeButton {
