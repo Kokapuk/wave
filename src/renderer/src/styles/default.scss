@@ -19,6 +19,14 @@
   }
 }
 
+:root {
+  view-transition-name: none;
+}
+
+::view-transition {
+  pointer-events: none;
+}
+
 body {
   background-color: $black;
 }

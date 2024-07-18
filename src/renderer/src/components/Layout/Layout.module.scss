@@ -10,4 +10,26 @@
   position: relative;
   padding: 20px 50px;
   min-height: calc(100% - $title-bar-height - $controls-height);
+
+  &.enter {
+    opacity: 0;
+    scale: .965;
+  }
+  
+  &.enterActive {
+    opacity: 1;
+    scale: 1;
+    @include transition(opacity, scale);
+  }
+  
+  &.exit {
+    opacity: 1;
+    scale: 1;
+  }
+  
+  &.exitActive {
+    opacity: 0;
+    scale: 1.035;
+    @include transition(opacity, scale);
+  }
 }

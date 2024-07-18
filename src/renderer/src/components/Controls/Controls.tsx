@@ -11,6 +11,7 @@ import cn from 'classnames';
 import dayjs from 'dayjs';
 import duration from 'dayjs/plugin/duration';
 import { useEffect, useMemo, useState } from 'react';
+import { CSSTransition, SwitchTransition } from 'react-transition-group';
 import LoadingSpinner from '../LoadingSpinner';
 import Slider from '../Slider';
 import styles from './Controls.module.scss';
@@ -64,21 +65,35 @@ const Controls = () => {
 
   return (
     <div className={styles.container}>
-      <div className={styles.track}>
-        {currentTrack && (
-          <>
-            <img className={styles.cover} src={currentTrack.cover} width={56} height={56} />
-            <div>
-              <p title={currentTrack.name} className={styles.name}>
-                {currentTrack.name}
-              </p>
-              <p title={currentTrack.artist} className={styles.artist}>
-                {currentTrack.artist}
-              </p>
-            </div>
-          </>
-        )}
-      </div>
+      <SwitchTransition>
+        <CSSTransition
+          key={currentTrackIndex}
+          timeout={200}
+          classNames={{
+            enter: styles.enter,
+            enterActive: styles.enterActive,
+            exit: styles.exit,
+            exitActive: styles.exitActive,
+          }}
+          unmountOnExit
+        >
+          <div className={styles.track}>
+            {currentTrack && (
+              <>
+                <img className={styles.cover} src={currentTrack.cover} width={56} height={56} />
+                <div>
+                  <p title={currentTrack.name} className={styles.name}>
+                    {currentTrack.name}
+                  </p>
+                  <p title={currentTrack.artist} className={styles.artist}>
+                    {currentTrack.artist}
+                  </p>
+                </div>
+              </>
+            )}
+          </div>
+        </CSSTransition>
+      </SwitchTransition>
 
       <div className={styles.playback}>
         <div className={styles.buttons}>

@@ -1,12 +1,14 @@
+import EmptyPlaceholder from '@renderer/components/EmptyPlaceholder';
 import Track from '@renderer/components/Track';
+import useViewTransitionState from '@renderer/hooks/useViewTransitionState';
 import SoundCloud from '@renderer/icons/SoundCloud';
 import YouTube from '@renderer/icons/YouTube';
 import usePlayerStore from '@renderer/store/playerStore';
 import styles from './Home.module.scss';
-import EmptyPlaceholder from '@renderer/components/EmptyPlaceholder';
 
 const Home = () => {
-  const tracks = usePlayerStore((st) => st.tracks);
+  const originalTracks = usePlayerStore((st) => st.tracks);
+  const [tracks, isTransitioning] = useViewTransitionState(originalTracks);
 
   return (
     <ul className={styles.grid}>
@@ -22,7 +24,7 @@ const Home = () => {
         />
       )}
       {tracks.map((i) => (
-        <li key={i.id}>
+        <li style={{ viewTransitionName: isTransitioning ? `track-${i.id}` : 'none' }} key={i.id}>
           <Track track={i} />
         </li>
       ))}

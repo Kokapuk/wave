@@ -11,6 +11,42 @@
   overflow: hidden;
   width: fit-content;
   max-width: 400px;
+
+  @mixin in {
+    opacity: 1;
+    height: 45px;
+    padding: 12px;
+    margin-top: 0;
+  }
+
+  @mixin out {
+    opacity: 0;
+    height: 0;
+    padding: 0 12px;
+    margin-top: -15px;
+  }
+
+  @mixin transitions {
+    @include transition(opacity, height, padding, margin);
+  }
+
+  &.enter {
+    @include out;
+  }
+
+  &.enterActive {
+    @include in;
+    @include transitions;
+  }
+
+  &.exit {
+    @include in;
+  }
+
+  &.exitActive {
+    @include out;
+    @include transitions;
+  }
 }
 
 .progress {

@@ -1,8 +1,8 @@
 import cn from 'classnames';
 import { cloneElement, useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
+import { CSSTransition } from 'react-transition-group';
 import { MenuItem, MenuProps } from '.';
-import Transition from '../Transition';
 import styles from './Menu.module.scss';
 
 const Menu = ({ children: trigger, menu }: MenuProps) => {
@@ -60,7 +60,17 @@ const Menu = ({ children: trigger, menu }: MenuProps) => {
   return (
     <>
       {createPortal(
-        <Transition display={isOpen} classes={{ enter: styles.enter, exit: styles.exit }}>
+        <CSSTransition
+          in={isOpen}
+          timeout={200}
+          unmountOnExit
+          classNames={{
+            enter: styles.enter,
+            enterActive: styles.enterActive,
+            exit: styles.exit,
+            exitActive: styles.exitActive,
+          }}
+        >
           <div
             ref={menuRef}
             style={{ top: position.y, left: position.x }}
@@ -77,7 +87,7 @@ const Menu = ({ children: trigger, menu }: MenuProps) => {
               ))}
             </ul>
           </div>
-        </Transition>,
+        </CSSTransition>,
         document.getElementById('menuRoot') as Element
       )}
       {cloneElement(trigger, {
