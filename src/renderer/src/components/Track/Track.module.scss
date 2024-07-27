@@ -32,7 +32,7 @@
     }
   }
 
-  &.coverContainer:hover .playButton {
+  &:hover .playButton {
     background-color: hsl(from black h s l / 0.5);
 
     .icon {

@@ -41,7 +41,7 @@ const Track = ({ track, ...props }: Props & Pick<HTMLProps<HTMLDivElement>, 'onC
   return (
     <div {...props} className={styles.container}>
       <div className={styles.coverContainer}>
-        <img className={styles.cover} src={track.cover} alt={track.name} />
+        <img className={styles.cover} src={track.cover} alt={track.name} loading="lazy" />
         <button onClick={handleClick} className={styles.playButton}>
           {tracks[currentTrackIndex ?? -1]?.id !== track.id || playerState === 'paused' ? (
             <Play className={styles.icon} />

@@ -7,29 +7,36 @@
 }
 
 .pageContainer {
+  display: flex;
   position: relative;
-  padding: 20px 50px;
   min-height: calc(100% - $title-bar-height - $controls-height);
 
-  &.enter {
-    opacity: 0;
-    scale: .965;
-  }
-  
-  &.enterActive {
-    opacity: 1;
-    scale: 1;
-    @include transition(opacity, scale);
-  }
-  
-  &.exit {
-    opacity: 1;
-    scale: 1;
-  }
-  
-  &.exitActive {
-    opacity: 0;
-    scale: 1.035;
-    @include transition(opacity, scale);
+  .transitionWrapper {
+    padding: 20px 50px;
+    flex: 1;
+
+    &.enter {
+      opacity: 0;
+      scale: 0.975;
+    }
+
+    &.enterActive {
+      opacity: 1;
+      scale: 1;
+      @include transition(opacity, scale);
+      transition-duration: $transition-half-duration;
+    }
+
+    &.exit {
+      opacity: 1;
+      scale: 1;
+    }
+
+    &.exitActive {
+      opacity: 0;
+      scale: 1.025;
+      @include transition(opacity, scale);
+      transition-duration: $transition-half-duration;
+    }
   }
 }

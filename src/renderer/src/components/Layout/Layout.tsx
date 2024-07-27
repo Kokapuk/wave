@@ -17,23 +17,25 @@ const Layout = () => {
     <>
       <div className={styles.wrapper}>
         <TitleBar />
-        <Suspense>
-          <SwitchTransition>
-            <CSSTransition
-              key={location.pathname}
-              timeout={200}
-              classNames={{
-                enter: styles.enter,
-                enterActive: styles.enterActive,
-                exit: styles.exit,
-                exitActive: styles.exitActive,
-              }}
-              unmountOnExit
-            >
-              <div className={styles.pageContainer}>{currentOutlet}</div>
-            </CSSTransition>
-          </SwitchTransition>
-        </Suspense>
+        <div className={styles.pageContainer}>
+          <Suspense>
+            <SwitchTransition>
+              <CSSTransition
+                key={location.pathname}
+                timeout={200}
+                classNames={{
+                  enter: styles.enter,
+                  enterActive: styles.enterActive,
+                  exit: styles.exit,
+                  exitActive: styles.exitActive,
+                }}
+                unmountOnExit
+              >
+                <div className={styles.transitionWrapper}>{currentOutlet}</div>
+              </CSSTransition>
+            </SwitchTransition>
+          </Suspense>
+        </div>
         <Controls />
       </div>
 
