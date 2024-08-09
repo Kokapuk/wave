@@ -14,20 +14,16 @@
 
   @mixin in {
     opacity: 1;
-    height: 45px;
-    padding: 12px;
-    margin-top: 0;
+    margin-bottom: 0;
   }
 
   @mixin out {
     opacity: 0;
-    height: 0;
-    padding: 0 12px;
-    margin-top: -15px;
+    margin-bottom: -60px;
   }
 
   @mixin transitions {
-    @include transition(opacity, height, padding, margin);
+    @include transition(opacity, margin);
   }
 
   &.enter {

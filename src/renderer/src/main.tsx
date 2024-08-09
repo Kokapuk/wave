@@ -7,6 +7,7 @@ import Toasts from './components/Toasts';
 
 const Home = lazy(() => import('./pages/Home'));
 const AddYouTube = lazy(() => import('./pages/AddYouTube'));
+const AddSoundCloud = lazy(() => import('./pages/AddSoundCloud'));
 
 const router = createBrowserRouter([
   {
@@ -20,7 +21,7 @@ const router = createBrowserRouter([
       },
       {
         path: 'soundcloud',
-        element: <h1>Coming soon...</h1>,
+        element: <AddSoundCloud />,
       },
     ],
   },

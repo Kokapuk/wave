@@ -1,9 +1,9 @@
 import cn from 'classnames';
 import { cloneElement, useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
-import { CSSTransition } from 'react-transition-group';
 import { MenuItem, MenuProps } from '.';
 import styles from './Menu.module.scss';
+import SwitchTransition from '../SwitchTransition';
 
 const Menu = ({ children: trigger, menu }: MenuProps) => {
   const [isOpen, setOpen] = useState(false);
@@ -60,34 +60,37 @@ const Menu = ({ children: trigger, menu }: MenuProps) => {
   return (
     <>
       {createPortal(
-        <CSSTransition
-          in={isOpen}
-          timeout={200}
-          unmountOnExit
-          classNames={{
+        <SwitchTransition
+          classes={{
             enter: styles.enter,
-            enterActive: styles.enterActive,
             exit: styles.exit,
-            exitActive: styles.exitActive,
           }}
+          timeout={200}
+          nodeRef={menuRef}
         >
-          <div
-            ref={menuRef}
-            style={{ top: position.y, left: position.x }}
-            className={cn(styles.menu, styles[horizontalPlacement], styles[verticalPlacement])}
-          >
-            <ul className={styles.items}>
-              {menu.map((i) => (
-                <li key={i.label}>
-                  <button onClick={() => handleMenuItemClick(i.onClick)} disabled={i.disabled} className={styles.item}>
-                    <div className={styles.iconContainer}>{i.icon}</div>
-                    {i.label}
-                  </button>
-                </li>
-              ))}
-            </ul>
-          </div>
-        </CSSTransition>,
+          {isOpen && (
+            <div
+              ref={menuRef}
+              style={{ top: position.y, left: position.x }}
+              className={cn(styles.menu, styles[horizontalPlacement], styles[verticalPlacement])}
+            >
+              <ul className={styles.items}>
+                {menu.map((i) => (
+                  <li key={i.label}>
+                    <button
+                      onClick={() => handleMenuItemClick(i.onClick)}
+                      disabled={i.disabled}
+                      className={styles.item}
+                    >
+                      <div className={styles.iconContainer}>{i.icon}</div>
+                      {i.label}
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+        </SwitchTransition>,
         document.getElementById('menuRoot') as Element
       )}
       {cloneElement(trigger, {

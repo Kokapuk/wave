@@ -7,6 +7,7 @@ import styles from './Toasts.module.scss';
 
 const Toasts = () => {
   const { toasts } = useToastsStore();
+
   return createPortal(
     <TransitionGroup className={styles.container}>
       {toasts.map((i) => (

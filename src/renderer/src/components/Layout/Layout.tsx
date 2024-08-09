@@ -1,9 +1,9 @@
 import usePlayerStore from '@renderer/store/playerStore';
 import { Suspense } from 'react';
 import { useLocation, useOutlet } from 'react-router-dom';
-import { CSSTransition, SwitchTransition } from 'react-transition-group';
 import Controls from '../Controls';
 import SoundCloudPlayer from '../SoundCloudPlayer';
+import SwitchTransition from '../SwitchTransition';
 import TitleBar from '../TitleBar';
 import YouTubePlayer from '../YouTubePlayer';
 import styles from './Layout.module.scss';
@@ -19,20 +19,18 @@ const Layout = () => {
         <TitleBar />
         <div className={styles.pageContainer}>
           <Suspense>
-            <SwitchTransition>
-              <CSSTransition
-                key={location.pathname}
-                timeout={200}
-                classNames={{
-                  enter: styles.enter,
-                  enterActive: styles.enterActive,
-                  exit: styles.exit,
-                  exitActive: styles.exitActive,
-                }}
-                unmountOnExit
-              >
-                <div className={styles.transitionWrapper}>{currentOutlet}</div>
-              </CSSTransition>
+            <SwitchTransition
+              classes={{
+                enter: styles.enter,
+                exit: styles.exit,
+              }}
+              timeout={200}
+              mode="in-out"
+              freeSpaceOnExit
+            >
+              <div key={location.pathname} className={styles.transitionWrapper}>
+                {currentOutlet}
+              </div>
             </SwitchTransition>
           </Suspense>
         </div>

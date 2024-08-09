@@ -1,5 +1,6 @@
 import { Track } from '@renderer/utils/types';
 import { useEffect, useState } from 'react';
+import Button from '../Button';
 import Modal from '../Modal';
 import styles from './TrackModal.module.scss';
 
@@ -41,9 +42,7 @@ const TrackModal = ({ track, open, onClose, onSubmit, buttonLabel }: Props) => {
           <p className={styles.label}>Artist</p>
           <input className={styles.input} value={artist} onChange={(e) => setArtist(e.currentTarget.value)} />
         </div>
-        <button onClick={handleSubmit} className={styles.button}>
-          {buttonLabel}
-        </button>
+        <Button onClick={handleSubmit}>{buttonLabel}</Button>
       </div>
     </Modal>
   );

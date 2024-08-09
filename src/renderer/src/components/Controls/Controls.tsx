@@ -11,10 +11,10 @@ import cn from 'classnames';
 import dayjs from 'dayjs';
 import duration from 'dayjs/plugin/duration';
 import { useEffect, useMemo, useState } from 'react';
-import { CSSTransition, SwitchTransition } from 'react-transition-group';
 import LoadingSpinner from '../LoadingSpinner';
 import Slider from '../Slider';
 import styles from './Controls.module.scss';
+import SwitchTransition from '../SwitchTransition';
 
 dayjs.extend(duration);
 
@@ -65,34 +65,30 @@ const Controls = () => {
 
   return (
     <div className={styles.container}>
-      <SwitchTransition>
-        <CSSTransition
-          key={currentTrackIndex}
-          timeout={200}
-          classNames={{
-            enter: styles.enter,
-            enterActive: styles.enterActive,
-            exit: styles.exit,
-            exitActive: styles.exitActive,
-          }}
-          unmountOnExit
-        >
-          <div className={styles.track}>
-            {currentTrack && (
-              <>
-                <img className={styles.cover} src={currentTrack.cover} width={56} height={56} />
-                <div>
-                  <p title={currentTrack.name} className={styles.name}>
-                    {currentTrack.name}
-                  </p>
-                  <p title={currentTrack.artist} className={styles.artist}>
-                    {currentTrack.artist}
-                  </p>
-                </div>
-              </>
-            )}
-          </div>
-        </CSSTransition>
+      <SwitchTransition
+        classes={{
+          enter: styles.enter,
+          exit: styles.exit,
+        }}
+        timeout={200}
+        mode="in-out"
+        freeSpaceOnExit
+      >
+        <div key={currentTrack?.id ?? 'NONE'} className={styles.track}>
+          {currentTrack && (
+            <>
+              <img className={styles.cover} src={currentTrack.cover} width={56} height={56} />
+              <div>
+                <p title={currentTrack.name} className={styles.name}>
+                  {currentTrack.name}
+                </p>
+                <p title={currentTrack.artist} className={styles.artist}>
+                  {currentTrack.artist}
+                </p>
+              </div>
+            </>
+          )}
+        </div>
       </SwitchTransition>
 
       <div className={styles.playback}>

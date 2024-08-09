@@ -1,31 +1,37 @@
 @import '@renderer/styles/constants';
 
-.backdrop {
+.container {
   position: fixed;
   inset: 0;
   top: $title-bar-height;
   bottom: $controls-height;
-  background-color: hsl(from black h s l / 0.65);
+  z-index: 5;
   display: grid;
   place-items: center;
-  z-index: 5;
+  pointer-events: none;
+}
 
+.backdrop {
+  position: absolute;
+  inset: 0;
+  background-color: hsl(from black h s l / 0.65);
+  pointer-events: all;
+  
   &.enter {
-    opacity: 0;
-  }
-
-  &.enterActive {
-    opacity: 1;
-    @include transition(opacity)
+    animation: backdropFade $transition-duration forwards;
   }
   
   &.exit {
-    opacity: 1;
+    animation: backdropFade $transition-duration forwards reverse ease-in;
   }
-
-  &.exitActive {
-    opacity: 0;
-    @include transition(opacity)
+  
+  @keyframes backdropFade {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
   }
 }
 
@@ -33,15 +39,25 @@
   @include blurPanel(top, right, bottom, left);
   border-radius: 7px;
   overflow: hidden;
-  position: relative;
-  @include transition(scale);
+  pointer-events: all;
 
   &.enter {
-    scale: 1;
+    animation: modalGrow $transition-duration forwards;
   }
 
   &.exit {
-    scale: 0.95;
+    animation: modalGrow $transition-duration forwards reverse ease-in;
+  }
+
+  @keyframes modalGrow {
+    from {
+      opacity: 0;
+      scale: 0.95;
+    }
+    to {
+      opacity: 1;
+      scale: 1;
+    }
   }
 }
 
