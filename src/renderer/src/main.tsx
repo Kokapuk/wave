@@ -2,12 +2,11 @@ import { lazy } from 'react';
 import ReactDOM from 'react-dom/client';
 import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import Layout from './components/Layout';
-import './styles/default.scss';
 import Toasts from './components/Toasts';
+import './styles/default.scss';
 
 const Home = lazy(() => import('./pages/Home'));
-const AddYouTube = lazy(() => import('./pages/AddYouTube'));
-const AddSoundCloud = lazy(() => import('./pages/AddSoundCloud'));
+const AddTrack = lazy(() => import('./pages/AddTrack'));
 
 const router = createBrowserRouter([
   {
@@ -16,12 +15,8 @@ const router = createBrowserRouter([
     children: [
       { index: true, element: <Home /> },
       {
-        path: 'youtube',
-        element: <AddYouTube />,
-      },
-      {
-        path: 'soundcloud',
-        element: <AddSoundCloud />,
+        path: 'add',
+        element: <AddTrack />,
       },
     ],
   },

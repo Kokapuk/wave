@@ -3,7 +3,7 @@
 .container {
   position: fixed;
   inset: 0;
-  top: $title-bar-height;
+  top: calc(env(titlebar-area-height) + 1px);
   bottom: $controls-height;
   z-index: 5;
   display: grid;

@@ -4,7 +4,9 @@ import styles from './TitleBar.module.scss';
 const TitleBar = () => {
   return (
     <div className={styles.titleBar}>
-      <Tabs />
+      <div className={styles.safeArea}>
+        <Tabs />
+      </div>
     </div>
   );
 };

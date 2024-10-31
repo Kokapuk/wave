@@ -1,6 +1,6 @@
-import { app, shell, BrowserWindow, ipcMain } from 'electron';
+import { electronApp, is, optimizer } from '@electron-toolkit/utils';
+import { app, BrowserWindow, ipcMain, shell } from 'electron';
 import { join } from 'path';
-import { electronApp, optimizer, is } from '@electron-toolkit/utils';
 import icon from '../../resources/icon.png?asset';
 
 const createWindow = () => {
@@ -15,7 +15,7 @@ const createWindow = () => {
     titleBarOverlay: {
       color: 'rgba(0,0,0,0)',
       symbolColor: 'white',
-      height: 34,
+      height: 35,
     },
     ...(process.platform === 'linux' ? { icon } : {}),
     webPreferences: {
@@ -31,10 +31,6 @@ const createWindow = () => {
   });
 
   window.webContents.setWindowOpenHandler(() => ({ action: 'deny' }));
-
-  window.webContents.on('will-attach-webview', (_, webPreferences) => {
-    webPreferences.preload = join(__dirname, '../preload/youtube.js');
-  });
 
   if (is.dev && process.env['ELECTRON_RENDERER_URL']) {
     window.loadURL(process.env['ELECTRON_RENDERER_URL']);

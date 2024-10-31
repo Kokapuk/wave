@@ -1,7 +1,7 @@
 import Button from '@renderer/components/Button';
 import { useState } from 'react';
 
-const AddSoundCloud = () => {
+const AddTrack = () => {
   const [isLoading, setLoading] = useState(false);
 
   return (
@@ -14,4 +14,4 @@ const AddSoundCloud = () => {
   );
 };
 
-export default AddSoundCloud;
+export default AddTrack;

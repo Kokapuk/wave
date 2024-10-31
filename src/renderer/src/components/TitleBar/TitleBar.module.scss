@@ -3,10 +3,14 @@
 .titleBar {
   @include blurPanel(bottom);
   position: sticky;
-  top: 0;
-  right: 0;
   left: 0;
-  height: $title-bar-height;
+  top: 0;
+  height: calc(env(titlebar-area-height) + 1px);
   -webkit-app-region: drag;
   z-index: 2;
+}
+
+.safeArea {
+  height: 100%;
+  width: calc(env(titlebar-area-width) - 1px);
 }

@@ -12,7 +12,6 @@ export default defineConfig({
       rollupOptions: {
         input: {
           index: resolve(__dirname, 'src/preload/index.ts'),
-          youtube: resolve(__dirname, 'src/preload/youtube.ts')
         }
       }
     }

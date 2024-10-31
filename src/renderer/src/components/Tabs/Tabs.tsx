@@ -1,6 +1,5 @@
+import Add from '@renderer/icons/Add';
 import Home from '@renderer/icons/Home';
-import SoundCloud from '@renderer/icons/SoundCloud';
-import YouTube from '@renderer/icons/YouTube';
 import cn from 'classnames';
 import { Link, useLocation } from 'react-router-dom';
 import { Route } from '.';
@@ -12,12 +11,8 @@ const routes: Route[] = [
     href: '/',
   },
   {
-    icon: <YouTube />,
-    href: '/youtube',
-  },
-  {
-    icon: <SoundCloud />,
-    href: '/soundcloud',
+    icon: <Add />,
+    href: '/add',
   },
 ];
 

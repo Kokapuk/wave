@@ -1,12 +1,11 @@
 import EmptyPlaceholder from '@renderer/components/EmptyPlaceholder';
 import LayoutTransition from '@renderer/components/LayoutTransition';
+import SwitchTransition from '@renderer/components/SwitchTransition';
 import Track from '@renderer/components/Track';
 import useDelayedState from '@renderer/hooks/useDelayedState';
-import SoundCloud from '@renderer/icons/SoundCloud';
-import YouTube from '@renderer/icons/YouTube';
+import Add from '@renderer/icons/Add';
 import usePlayerStore from '@renderer/store/playerStore';
 import styles from './Home.module.scss';
-import SwitchTransition from '@renderer/components/SwitchTransition';
 
 const Home = () => {
   const originalTracks = usePlayerStore((st) => st.tracks);
@@ -27,8 +26,7 @@ const Home = () => {
               title="Your playlist appears to be empty"
               caption={
                 <>
-                  Use <YouTube className={styles.icon} /> or <SoundCloud className={styles.icon} /> to find and add
-                  tracks to the playlist
+                  Use <Add /> add tracks to the playlist
                 </>
               }
             />

@@ -9,7 +9,7 @@
 .pageContainer {
   display: flex;
   position: relative;
-  min-height: calc(100% - $title-bar-height - $controls-height);
+  min-height: calc(100% - (env(titlebar-area-height) + 1px) - $controls-height);
 
   .transitionWrapper {
     padding: 20px 50px;
