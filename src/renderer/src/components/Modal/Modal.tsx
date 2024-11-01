@@ -2,7 +2,6 @@ import Close from '@renderer/icons/Close';
 import cn from 'classnames';
 import { CSSProperties, ReactNode, useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
-import SwitchTransition from '../SwitchTransition';
 import styles from './Modal.module.scss';
 
 interface Props {
@@ -45,45 +44,26 @@ const Modal = ({ open, onClose, children, className }: Props) => {
 
   return createPortal(
     <div className={styles.container}>
-      <SwitchTransition
-        classes={{
-          enter: styles.enter,
-          exit: styles.exit,
-        }}
-        timeout={200}
-      >
-        {open && <div className={styles.backdrop} onMouseDown={onClose} />}
-      </SwitchTransition>
-      <SwitchTransition
-        classes={{
-          enter: styles.enter,
-          exit: styles.exit,
-        }}
-        timeout={200}
-        nodeRef={modal}
-      >
-        {open && (
-          <div
-            ref={modal}
-            className={cn(styles.modal, className)}
-            onMouseDown={(e) => e.stopPropagation()}
-            style={
-              {
-                '--initial-translate': `translate(${initialPos.x * posMultiplier}px, ${
-                  initialPos.y * posMultiplier
-                }px)`,
-              } as CSSProperties
-            }
-          >
-            {onClose && (
-              <button onClick={onClose} className={styles.closeButton}>
-                <Close />
-              </button>
-            )}
-            {children}
-          </div>
-        )}
-      </SwitchTransition>
+      {open && <div className={styles.backdrop} onMouseDown={onClose} />}
+      {open && (
+        <div
+          ref={modal}
+          className={cn(styles.modal, className)}
+          onMouseDown={(e) => e.stopPropagation()}
+          style={
+            {
+              '--initial-translate': `translate(${initialPos.x * posMultiplier}px, ${initialPos.y * posMultiplier}px)`,
+            } as CSSProperties
+          }
+        >
+          {onClose && (
+            <button onClick={onClose} className={styles.closeButton}>
+              <Close />
+            </button>
+          )}
+          {children}
+        </div>
+      )}
     </div>,
     document.getElementById('modalRoot') as HTMLElement
   );

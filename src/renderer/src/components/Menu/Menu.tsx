@@ -3,7 +3,6 @@ import { cloneElement, useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { MenuItem, MenuProps } from '.';
 import styles from './Menu.module.scss';
-import SwitchTransition from '../SwitchTransition';
 
 const Menu = ({ children: trigger, menu }: MenuProps) => {
   const [isOpen, setOpen] = useState(false);
@@ -60,14 +59,7 @@ const Menu = ({ children: trigger, menu }: MenuProps) => {
   return (
     <>
       {createPortal(
-        <SwitchTransition
-          classes={{
-            enter: styles.enter,
-            exit: styles.exit,
-          }}
-          timeout={200}
-          nodeRef={menuRef}
-        >
+        <>
           {isOpen && (
             <div
               ref={menuRef}
@@ -90,7 +82,7 @@ const Menu = ({ children: trigger, menu }: MenuProps) => {
               </ul>
             </div>
           )}
-        </SwitchTransition>,
+        </>,
         document.getElementById('menuRoot') as Element
       )}
       {cloneElement(trigger, {

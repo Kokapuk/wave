@@ -18,27 +18,6 @@
   &.right.bottom {
     translate: -100% -100%;
   }
-
-  &.enter {
-    animation: menuFade $transition-duration forwards;
-    transform-origin: top left;
-  }
-
-  &.exit {
-    animation: menuFade $transition-duration forwards reverse ease-in;
-    transform-origin: top left;
-  }
-
-  @keyframes menuFade {
-    from {
-      opacity: 0;
-      scale: 1 0.95;
-    }
-    to {
-      opacity: 1;
-      scale: 1 1;
-    }
-  }
 }
 
 .items {

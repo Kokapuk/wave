@@ -16,23 +16,6 @@
   inset: 0;
   background-color: hsl(from black h s l / 0.65);
   pointer-events: all;
-
-  &.enter {
-    animation: backdropFade $transition-duration forwards;
-  }
-
-  &.exit {
-    animation: backdropFade $transition-duration forwards reverse ease-in;
-  }
-
-  @keyframes backdropFade {
-    from {
-      opacity: 0;
-    }
-    to {
-      opacity: 1;
-    }
-  }
 }
 
 .modal {
@@ -40,38 +23,6 @@
   border-radius: 7px;
   overflow: hidden;
   pointer-events: all;
-
-  &.enter {
-    animation: modalGrowIn $transition-duration forwards;
-  }
-
-  &.exit {
-    animation: modalGrowOut $transition-duration forwards;
-  }
-
-  @keyframes modalGrowIn {
-    from {
-      opacity: 0;
-      scale: 0.75;
-      transform: var(--initial-translate);
-    }
-    to {
-      opacity: 1;
-      scale: 1;
-      transform: none;
-    }
-  }
-
-  @keyframes modalGrowOut {
-    from {
-      opacity: 1;
-      scale: 1;
-    }
-    to {
-      opacity: 0;
-      scale: 0.95;
-    }
-  }
 }
 
 .closeButton {

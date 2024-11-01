@@ -52,36 +52,6 @@
     color: hsl(from white h s l / 0.75);
     @include clampLines;
   }
-
-  &.enter {
-    animation: trackSlideIn $transition-duration forwards;
-  }
-  
-  &.exit {
-    animation: trackSlideOut $transition-duration forwards;
-  }
-
-  @keyframes trackSlideIn {
-    from {
-      opacity: 0;
-      translate: -50%;
-    }
-    to {
-      opacity: 1;
-      translate: 0;
-    }
-  }
-
-  @keyframes trackSlideOut {
-    from {
-      opacity: 1;
-      translate: 0;
-    }
-    to {
-      opacity: 0;
-      translate: 50%;
-    }
-  }
 }
 
 .playback {

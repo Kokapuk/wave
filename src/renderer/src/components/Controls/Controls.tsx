@@ -7,18 +7,12 @@ import RewindForward from '@renderer/icons/RewindForward';
 import Speaker from '@renderer/icons/Speaker';
 import SpeakerMuted from '@renderer/icons/SpeakerMuted';
 import usePlayerStore from '@renderer/store/playerStore';
+import getFormattedDuration from '@renderer/utils/getFormattedDuration';
 import cn from 'classnames';
-import dayjs from 'dayjs';
-import duration from 'dayjs/plugin/duration';
 import { useEffect, useMemo, useState } from 'react';
 import LoadingSpinner from '../LoadingSpinner';
 import Slider from '../Slider';
 import styles from './Controls.module.scss';
-import SwitchTransition from '../SwitchTransition';
-
-dayjs.extend(duration);
-
-const formatDuration = (time: number): string => dayjs.duration(time * 1000).format(`${time > 3600 ? 'HH:' : ''}mm:ss`);
 
 const Controls = () => {
   const {
@@ -65,31 +59,21 @@ const Controls = () => {
 
   return (
     <div className={styles.container}>
-      <SwitchTransition
-        classes={{
-          enter: styles.enter,
-          exit: styles.exit,
-        }}
-        timeout={200}
-        mode="in-out"
-        freeSpaceOnExit
-      >
-        <div key={currentTrack?.id ?? 'NONE'} className={styles.track}>
-          {currentTrack && (
-            <>
-              <img className={styles.cover} src={currentTrack.cover} width={56} height={56} />
-              <div>
-                <p title={currentTrack.name} className={styles.name}>
-                  {currentTrack.name}
-                </p>
-                <p title={currentTrack.artist} className={styles.artist}>
-                  {currentTrack.artist}
-                </p>
-              </div>
-            </>
-          )}
-        </div>
-      </SwitchTransition>
+      <div key={currentTrack?.id ?? 'NONE'} className={styles.track}>
+        {currentTrack && (
+          <>
+            <img className={styles.cover} src={currentTrack.cover} width={56} height={56} />
+            <div>
+              <p title={currentTrack.name} className={styles.name}>
+                {currentTrack.name}
+              </p>
+              <p title={currentTrack.artist} className={styles.artist}>
+                {currentTrack.artist}
+              </p>
+            </div>
+          </>
+        )}
+      </div>
 
       <div className={styles.playback}>
         <div className={styles.buttons}>
@@ -126,7 +110,7 @@ const Controls = () => {
         </div>
 
         <div className={styles.timeline}>
-          <p className={styles.time}>{formatDuration(isSeeking ? seekingTimeValue : currentTime)}</p>
+          <p className={styles.time}>{getFormattedDuration(isSeeking ? seekingTimeValue : currentTime)}</p>
 
           <Slider
             onChange={setSeekingTimeValue}
@@ -138,7 +122,7 @@ const Controls = () => {
             disabled={!player}
           />
 
-          <p className={styles.time}>{formatDuration(duration)}</p>
+          <p className={styles.time}>{getFormattedDuration(duration)}</p>
         </div>
       </div>
 

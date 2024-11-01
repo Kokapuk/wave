@@ -7,24 +7,3 @@
   list-style: none;
   justify-content: center;
 }
-
-.placeholderTransition {
-  &.enter {
-    animation: placeholderFade $transition-duration forwards;
-  }
-
-  &.exit {
-    animation: placeholderFade $transition-duration forwards reverse ease-in;
-  }
-
-  @keyframes placeholderFade {
-    from {
-      opacity: 0;
-      transform: translateY(-120px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-}
